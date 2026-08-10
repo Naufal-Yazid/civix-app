@@ -5,13 +5,13 @@ import { ArrowRight } from "lucide-react";
 
 export default function HeroSection() {
   return (
-    <section className="relative w-full bg-white pt-12 pb-16 sm:pt-20 sm:pb-24 lg:pt-25 lg:pb-30 overflow-hidden">
-      {/* Container utama dengan padding horizontal responsif (px-6 sm:px-8 lg:px-12) */}
+    <section className="relative w-full bg-white pt-30 pb-16 sm:pt-20 sm:pb-24 lg:pt-25 lg:pb-30 overflow-hidden">
+      {/* Container utama dengan padding horizontal responsif */}
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          {/* Kolom Kiri: Copywriting (Responsif & Menjorok Pas) */}
-          <div className="lg:col-span-6 flex flex-col items-start space-y-5 sm:space-y-6 z-10">
-            {/* Judul Teks dengan Ukuran Responsif */}
+          {/* Kolom Kiri: Copywriting (Rata Tengah di Mobile, Rata Kiri di Desktop) */}
+          <div className="lg:col-span-6 flex flex-col items-center lg:items-start text-center lg:text-left space-y-5 sm:space-y-6 z-10">
+            {/* Judul Teks */}
             <h1 className="text-3xl sm:text-4xl lg:text-5xl leading-tight sm:leading-tight lg:leading-[60px] tracking-tight font-bold text-[#002045]">
               Evaluasi & Tingkatkan Kompetensi
               <span className="text-[#006A61]"> Mengajar</span>
@@ -19,12 +19,12 @@ export default function HeroSection() {
             </h1>
 
             {/* Deskripsi Teks */}
-            <p className="text-[#64748B] text-sm sm:text-base leading-relaxed max-w-xl">
+            <p className="text-[#64748B] text-sm sm:text-base leading-relaxed max-w-xl mx-auto lg:mx-0">
               Platform diagnostik mandiri untuk pengajar PPKn. Isi kuesioner tanpa login dan temukan gambaran level kompetensi serta peta kekuatan mengajar Anda sekarang.
             </p>
 
-            {/* Tombol CTA */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 w-full sm:w-auto">
+            {/* Tombol CTA (Center di Mobile, Start di Desktop) */}
+            <div className="flex flex-col sm:flex-row justify-center lg:justify-start items-center gap-3 sm:gap-4 pt-2 w-full sm:w-auto">
               <Link href="/assessment" className="inline-flex items-center justify-center px-6 py-3.5 bg-[#002045] text-white font-semibold text-sm rounded-xl hover:bg-[#133763] transition-all duration-200 shadow-md gap-2 w-full sm:w-auto">
                 Mulai Assessment Sekarang
                 <ArrowRight className="w-4 h-4" />
