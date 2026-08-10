@@ -21,7 +21,7 @@ export default function Navbar() {
           Civix<span className="text-[#006A61]">.id</span>
         </Link>
 
-        {/* --- DESKTOP NAVIGATION (Tampil di md ke atas) --- */}
+        {/* --- DESKTOP NAVIGATION --- */}
         <nav className="hidden md:flex items-center space-x-8 text-sm font-medium text-[#64748B]">
           {/* Beranda */}
           <Link href="/" className={`transition-colors py-2 ${pathname === "/" ? "text-[#002045] font-semibold border-b-2 border-[#002045]" : "hover:text-[#002045]"}`}>
@@ -61,14 +61,14 @@ export default function Navbar() {
           </Link>
         </nav>
 
-        {/* Tombol CTA Desktop Kanan */}
+        {/* Tombol CTA Desktop */}
         <div className="hidden md:block">
           <Link href="/assessment" className="px-5 py-2.5 bg-[#002045] text-white text-sm font-medium rounded-xl hover:bg-[#001833] transition-colors shadow-sm">
             Mulai Assessment
           </Link>
         </div>
 
-        {/* --- HAMBURGER BUTTON (Tampil di Mobile) --- */}
+        {/* --- HAMBURGER BUTTON (Mobile) --- */}
         <div className="flex md:hidden items-center space-x-3">
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-xl text-[#002045] hover:bg-gray-100 transition-colors focus:outline-none" aria-label="Toggle Navigation Menu">
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -76,9 +76,9 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* --- MOBILE MENU DRAWER --- */}
+      {/* --- MOBILE MENU DRAWER (ABSOLUTE / NIMPA HERO) --- */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-b border-gray-100 px-6 pt-2 pb-6 space-y-4 shadow-xl animate-in slide-in-from-top-2 duration-200">
+        <div className="absolute top-full left-0 right-0 w-full bg-white/95 backdrop-blur-md border-b border-gray-100 px-6 py-6 space-y-4 shadow-2xl z-50 md:hidden animate-in fade-in slide-in-from-top-2 duration-200">
           <nav className="flex flex-col space-y-3 text-sm font-medium text-[#64748B]">
             {/* Beranda */}
             <Link href="/" onClick={() => setMobileMenuOpen(false)} className={`py-2 px-3 rounded-xl transition-colors ${pathname === "/" ? "bg-[#002045]/5 text-[#002045] font-semibold" : "hover:bg-gray-50 text-[#1E1E1E]"}`}>
