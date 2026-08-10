@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum QuestionType {
+  SHORT_TEXT
+  LONG_TEXT
+  MULTIPLE_CHOICE
+  DROPDOWN
+  SCALE
+  CHECKBOX
+}
+
+enum QuestionStatus {
+  ACTIVE
+  INACTIVE
+  DRAFT
+}
+
+model Question {
+  id          String         @id @default(uuid())
+  code        String         @unique // Format ID seperti QUE001, QUE002
+  questionText String        @db.Text
+  dimension   String         // Misal: "Civic Competence", "Identitas Pedagogik"
+  type        QuestionType
+  status      QuestionStatus @default(DRAFT)
+  
+  // Konfigurasi Khusus Tipe Scale (opsional jika type == SCALE)
+  scaleMin    Int?           @default(1)
+  scaleMax    Int?           @default(5)
+  scaleMinLabel String?      // Misal: "Sangat Tidak Setuju"
+  scaleMaxLabel String?      // Misal: "Sangat Setuju"
+
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  options     Option[]
+}
+
+model Option {
+  id         String   @id @default(uuid())
+  questionId String
+  label      String?  // Misal: "A", "B", "C", "D"
+  text       String
+  score      Int      @default(0) // Bobot skor untuk kalkulasi
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
