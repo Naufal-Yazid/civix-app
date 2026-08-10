@@ -1,12 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileTentangOpen, setMobileTentangOpen] = useState(false);
 
   // Cek apakah halaman aktif berada di bagian "Tentang"
   const isTentangActive = pathname.startsWith("/tentang");
@@ -19,28 +21,26 @@ export default function Navbar() {
           Civix<span className="text-[#006A61]">.id</span>
         </Link>
 
-        {/* Menu Navigasi Tengah */}
+        {/* --- DESKTOP NAVIGATION (Tampil di md ke atas) --- */}
         <nav className="hidden md:flex items-center space-x-8 text-sm font-medium text-[#64748B]">
           {/* Beranda */}
           <Link href="/" className={`transition-colors py-2 ${pathname === "/" ? "text-[#002045] font-semibold border-b-2 border-[#002045]" : "hover:text-[#002045]"}`}>
             Beranda
           </Link>
 
-          {/* Dropdown Tentang */}
+          {/* Dropdown Tentang (Desktop) */}
           <div className={`relative group cursor-pointer flex items-center gap-1.5 transition-colors py-2 ${isTentangActive ? "text-[#002045] font-semibold border-b-2 border-[#002045]" : "hover:text-[#002045]"}`}>
             <Link href="/tentang" className="flex items-center gap-1.5">
               <span>Tentang</span>
               <ChevronDown className={`w-4 h-4 transition-transform duration-200 group-hover:rotate-180 ${isTentangActive ? "text-[#002045]" : "text-[#64748B] group-hover:text-[#002045]"}`} />
             </Link>
 
-            {/* Dropdown Content */}
+            {/* Dropdown Content Desktop */}
             <div className="absolute top-full left-0 w-52 bg-white border border-gray-100 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-200 py-2 mt-1 z-50">
-              {/* Submenu 1: Tentang Assessment */}
               <Link href="/tentang" className={`block px-4 py-2.5 text-sm transition-colors ${pathname === "/tentang" ? "bg-[#006A61]/10 text-[#006A61] font-semibold" : "text-[#1E1E1E] hover:bg-[#006A61]/10 hover:text-[#006A61]"}`}>
                 Tentang Assessment
               </Link>
 
-              {/* Submenu 2: Civix Insight */}
               <Link
                 href="/tentang/civix-insight"
                 className={`block px-4 py-2.5 text-sm transition-colors ${pathname === "/tentang/civix-insight" ? "bg-[#006A61]/10 text-[#006A61] font-semibold" : "text-[#1E1E1E] hover:bg-[#006A61]/10 hover:text-[#006A61]"}`}
@@ -61,13 +61,88 @@ export default function Navbar() {
           </Link>
         </nav>
 
-        {/* Tombol CTA Kanan */}
-        <div>
+        {/* Tombol CTA Desktop Kanan */}
+        <div className="hidden md:block">
           <Link href="/assessment" className="px-5 py-2.5 bg-[#002045] text-white text-sm font-medium rounded-xl hover:bg-[#001833] transition-colors shadow-sm">
             Mulai Assessment
           </Link>
         </div>
+
+        {/* --- HAMBURGER BUTTON (Tampil di Mobile) --- */}
+        <div className="flex md:hidden items-center space-x-3">
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-xl text-[#002045] hover:bg-gray-100 transition-colors focus:outline-none" aria-label="Toggle Navigation Menu">
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
+
+      {/* --- MOBILE MENU DRAWER --- */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-white border-b border-gray-100 px-6 pt-2 pb-6 space-y-4 shadow-xl animate-in slide-in-from-top-2 duration-200">
+          <nav className="flex flex-col space-y-3 text-sm font-medium text-[#64748B]">
+            {/* Beranda */}
+            <Link href="/" onClick={() => setMobileMenuOpen(false)} className={`py-2 px-3 rounded-xl transition-colors ${pathname === "/" ? "bg-[#002045]/5 text-[#002045] font-semibold" : "hover:bg-gray-50 text-[#1E1E1E]"}`}>
+              Beranda
+            </Link>
+
+            {/* Accordion Tentang (Mobile) */}
+            <div>
+              <button
+                onClick={() => setMobileTentangOpen(!mobileTentangOpen)}
+                className={`w-full flex items-center justify-between py-2 px-3 rounded-xl transition-colors ${isTentangActive ? "bg-[#002045]/5 text-[#002045] font-semibold" : "hover:bg-gray-50 text-[#1E1E1E]"}`}
+              >
+                <span>Tentang</span>
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${mobileTentangOpen ? "rotate-180 text-[#002045]" : "text-[#64748B]"}`} />
+              </button>
+
+              {/* Submenu Mobile */}
+              {mobileTentangOpen && (
+                <div className="pl-4 mt-1 space-y-1 border-l-2 border-[#006A61]/20 ml-3">
+                  <Link
+                    href="/tentang"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`block py-2 px-3 rounded-lg text-xs font-medium ${pathname === "/tentang" ? "bg-[#006A61]/10 text-[#006A61] font-semibold" : "text-[#64748B] hover:bg-gray-50"}`}
+                  >
+                    Tentang Assessment
+                  </Link>
+                  <Link
+                    href="/tentang/civix-insight"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`block py-2 px-3 rounded-lg text-xs font-medium ${pathname === "/tentang/civix-insight" ? "bg-[#006A61]/10 text-[#006A61] font-semibold" : "text-[#64748B] hover:bg-gray-50"}`}
+                  >
+                    Civix Insight
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Komunitas */}
+            <Link
+              href="/komunitas"
+              onClick={() => setMobileMenuOpen(false)}
+              className={`py-2 px-3 rounded-xl transition-colors ${pathname.startsWith("/komunitas") ? "bg-[#002045]/5 text-[#002045] font-semibold" : "hover:bg-gray-50 text-[#1E1E1E]"}`}
+            >
+              Komunitas
+            </Link>
+
+            {/* Hubungi Kami */}
+            <Link
+              href="/kontak"
+              onClick={() => setMobileMenuOpen(false)}
+              className={`py-2 px-3 rounded-xl transition-colors ${pathname.startsWith("/kontak") ? "bg-[#002045]/5 text-[#002045] font-semibold" : "hover:bg-gray-50 text-[#1E1E1E]"}`}
+            >
+              Hubungi Kami
+            </Link>
+          </nav>
+
+          {/* Tombol CTA Mobile */}
+          <div className="pt-2">
+            <Link href="/assessment" onClick={() => setMobileMenuOpen(false)} className="block w-full text-center py-3 bg-[#002045] text-white text-sm font-medium rounded-xl hover:bg-[#001833] transition-colors shadow-sm">
+              Mulai Assessment
+            </Link>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
