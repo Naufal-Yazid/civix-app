@@ -1,50 +1,41 @@
 import React from "react";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import DeleteModalButton from "@/components/admin/DeleteModalButton";
+import DeleteCategoryModal from "@/components/admin/DeleteCategoryModal";
 import { Plus, Eye, Edit3, ArrowUpDown, Search, ChevronDown, ChevronLeft, ChevronRight, Inbox } from "lucide-react";
 
-// Helper function untuk warna badge dimensi kompetensi
-const getDimensionBadgeStyle = (dimension: string) => {
-  switch (dimension) {
-    case "Civic Competence":
-      return "bg-sky-100 text-sky-700";
-    case "Identitas Pedagogik":
-      return "bg-teal-100 text-teal-700";
-    case "Civic Disposition":
-      return "bg-amber-100 text-amber-700";
-    default:
-      return "bg-blue-100 text-blue-700";
-  }
-};
-
-export default async function ManajemenSoalPage() {
-  const questions = await prisma.question.findMany({
+export default async function ParameterAssessmentPage() {
+  // Ambil data Kategori Kompetensi beserta hitungan jumlah soal terkait dari DB
+  const categories = await prisma.dimensionCategory.findMany({
     orderBy: { createdAt: "desc" },
   });
 
-  // Hitung total halaman berdasarkan batas 10 soal per halaman
-  const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.ceil(questions.length / ITEMS_PER_PAGE);
-
   return (
     <div className="space-y-6">
-      {/* 1. TITLE & TAMBAH PERTANYAAN CTA */}
+      {/* 1. TITLE & TAMBAH DIMENSI CTA */}
       <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-2xl font-bold text-[#002045]">Manajemen Soal</h1>
-          <p className="text-xs text-[#64748B] mt-1">Kelola bank soal untuk asesmen kompetensi kewarganegaraan.</p>
+          <h1 className="text-2xl font-bold text-[#002045]">Parameter Assessment</h1>
+          <p className="text-xs text-[#64748B] mt-1">Monitoring kompetensi civitas akademik secara real-time.</p>
         </div>
 
-        <Link href="/admin/soal/tambah" className="inline-flex items-center gap-2 px-5 py-3 bg-[#002045] text-white text-xs font-semibold rounded-xl hover:bg-[#001833] transition-colors shadow-xs">
+        <Link href="/admin/parameter/tambah" className="inline-flex items-center gap-2 px-5 py-3 bg-[#002045] text-white text-xs font-semibold rounded-xl hover:bg-[#001833] transition-colors shadow-xs">
           <Plus className="w-4 h-4" />
-          Tambah Pertanyaan
+          Tambah Dimensi
         </Link>
       </div>
 
-      {/* 2. FILTER CARD CONTAINER */}
+      {/* 2. TAB NAVIGATION (Kategori Kompetensi & Level Kompetensi) */}
+      <div className="border-b border-gray-200">
+        <nav className="flex space-x-8">
+          <button className="py-3 text-xs font-bold text-[#002045] border-b-2 border-[#002045] transition-colors">Kategori Kompetensi</button>
+          <button className="py-3 text-xs font-medium text-gray-400 hover:text-gray-600 transition-colors cursor-not-allowed">Level Kompetensi</button>
+        </nav>
+      </div>
+
+      {/* 3. FILTER CARD CONTAINER */}
       <div className="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-xs">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {/* Filter ID */}
           <div className="space-y-1.5">
             <label className="block text-[11px] font-semibold text-[#002045]">
@@ -58,27 +49,14 @@ export default async function ManajemenSoalPage() {
             </div>
           </div>
 
-          {/* Filter Pertanyaan */}
+          {/* Filter Nama Dimensi */}
           <div className="space-y-1.5">
             <label className="block text-[11px] font-semibold text-[#002045]">
-              Pertanyaan <span className="text-red-500">*</span>
+              Nama Dimensi <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <select className="w-full appearance-none px-3.5 py-2.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-600 focus:outline-none focus:border-[#006A61]">
-                <option value="">Semua Pertanyaan</option>
-              </select>
-              <ChevronDown className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-            </div>
-          </div>
-
-          {/* Filter Dimensi */}
-          <div className="space-y-1.5">
-            <label className="block text-[11px] font-semibold text-[#002045]">
-              Dimensi <span className="text-red-500">*</span>
-            </label>
-            <div className="relative">
-              <select className="w-full appearance-none px-3.5 py-2.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-600 focus:outline-none focus:border-[#006A61]">
-                <option value="">Semua Dimensi</option>
+                <option value="">Semua Nama Dimensi</option>
               </select>
               <ChevronDown className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
             </div>
@@ -99,9 +77,9 @@ export default async function ManajemenSoalPage() {
         </div>
       </div>
 
-      {/* 3. TABLE CONTAINER */}
+      {/* 4. TABLE CONTAINER */}
       <div className="bg-white border border-gray-200/80 rounded-2xl shadow-xs overflow-hidden">
-        {/* Table Top Controls (Sort & Search) */}
+        {/* Table Top Controls */}
         <div className="p-4 border-b border-gray-100 flex items-center justify-between">
           <button className="p-2 border border-gray-200 rounded-xl hover:bg-gray-50 text-gray-500">
             <ArrowUpDown className="w-4 h-4" />
@@ -113,7 +91,7 @@ export default async function ManajemenSoalPage() {
           </div>
         </div>
 
-        {/* Table Grid */}
+        {/* Table Data */}
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
@@ -123,54 +101,54 @@ export default async function ManajemenSoalPage() {
                 </th>
                 <th className="p-4 font-semibold w-12">#</th>
                 <th className="p-4 font-semibold w-24">ID</th>
-                <th className="p-4 font-semibold">Pertanyaan</th>
-                <th className="p-4 font-semibold">Dimensi</th>
-                <th className="p-4 font-semibold">Jenis Jawaban</th>
-                <th className="p-4 font-semibold">Status</th>
+                <th className="p-4 font-semibold w-48">Nama Dimensi</th>
+                <th className="p-4 font-semibold">Deskripsi</th>
+                <th className="p-4 font-semibold text-center w-24">Total Soal</th>
+                <th className="p-4 font-semibold w-24">Status</th>
                 <th className="p-4 font-semibold text-center w-28">Aksi</th>
               </tr>
             </thead>
 
             <tbody className="divide-y divide-gray-100">
-              {questions.length > 0 ? (
-                questions.map((q, idx) => (
-                  <tr key={q.id} className="hover:bg-gray-50/60 transition-colors">
+              {categories.length > 0 ? (
+                categories.map((cat, idx) => (
+                  <tr key={cat.id} className="hover:bg-gray-50/60 transition-colors">
                     <td className="p-4 text-center">
                       <input type="checkbox" className="rounded border-gray-300 accent-[#002045]" />
                     </td>
                     <td className="p-4 text-gray-400">{idx + 1}</td>
-                    <td className="p-4 font-bold text-[#002045]">{q.code}</td>
-                    <td className="p-4 max-w-md truncate text-[#1E1E1E]">{q.questionText}</td>
-                    <td className="p-4">
-                      <span className={`px-3 py-1 rounded-full font-medium text-[11px] ${getDimensionBadgeStyle(q.dimension)}`}>{q.dimension}</span>
-                    </td>
-                    <td className="p-4 text-gray-600 font-medium">{q.type}</td>
+                    <td className="p-4 font-bold text-[#002045]">{cat.code}</td>
+                    <td className="p-4 font-medium text-[#1E1E1E]">{cat.name}</td>
+                    <td className="p-4 max-w-xs truncate text-gray-500">{cat.description || "-"}</td>
+                    <td className="p-4 text-center font-bold text-[#002045]">0</td>
                     <td className="p-4 font-semibold">
-                      <span className={q.status === "ACTIVE" ? "text-emerald-600" : q.status === "INACTIVE" ? "text-rose-500" : "text-amber-500"}>{q.status === "ACTIVE" ? "Active" : q.status === "INACTIVE" ? "Inactive" : "Draft"}</span>
+                      <span className={cat.status === "ACTIVE" ? "text-emerald-600" : "text-rose-500"}>{cat.status === "ACTIVE" ? "Active" : "Inactive"}</span>
                     </td>
                     <td className="p-4">
                       <div className="flex items-center justify-center space-x-2 text-gray-500">
-                        <Link href={`/admin/soal/detail/${q.id}`} className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors" title="Lihat Detail">
+                        <Link href={`/admin/parameter/detail/${cat.id}`} className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors" title="Lihat Detail">
                           <Eye className="w-4 h-4 text-gray-500" />
                         </Link>
-                        <Link href={`/admin/soal/edit/${q.id}`} className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors">
+
+                        <Link href={`/admin/parameter/edit/${cat.id}`} className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors" title="Edit">
                           <Edit3 className="w-4 h-4 text-emerald-600" />
                         </Link>
-                        <DeleteModalButton id={q.id} code={q.code} />
+
+                        <DeleteCategoryModal id={cat.id} name={cat.name} />
                       </div>
                     </td>
                   </tr>
                 ))
               ) : (
-                /* EMPTY STATE (Tampilan Jika Database Masih Kosong) */
+                /* Empty State */
                 <tr>
                   <td colSpan={8} className="p-12 text-center">
                     <div className="max-w-xs mx-auto space-y-3">
                       <div className="w-12 h-12 bg-gray-50 text-gray-400 rounded-full flex items-center justify-center mx-auto border border-gray-100">
                         <Inbox className="w-6 h-6" />
                       </div>
-                      <h3 className="font-bold text-sm text-[#002045]">Belum Ada Pertanyaan</h3>
-                      <p className="text-xs text-gray-400 leading-relaxed">Bank soal masih kosong. Klik tombol &quot;Tambah Pertanyaan&quot; di atas untuk mulai memasukkan soal.</p>
+                      <h3 className="font-bold text-sm text-[#002045]">Belum Ada Dimensi</h3>
+                      <p className="text-xs text-gray-400 leading-relaxed">Kategori dimensi masih kosong. Klik &quot;Tambah Dimensi&quot; di atas untuk memasukkan data baru.</p>
                     </div>
                   </td>
                 </tr>
@@ -179,21 +157,16 @@ export default async function ManajemenSoalPage() {
           </table>
         </div>
 
-        {/* 4. PAGINATION FOOTER (Hanya Muncul Jika Total Soal > 10) */}
-        {questions.length > 10 && (
-          <div className="p-4 border-t border-gray-100 flex items-center justify-between animate-in fade-in duration-200">
-            <button className="p-2 border border-gray-200 rounded-xl text-gray-400 hover:bg-gray-50 disabled:opacity-40">
+        {/* Pagination Kondisional (> 10 Data) */}
+        {categories.length > 10 && (
+          <div className="p-4 border-t border-gray-100 flex items-center justify-between">
+            <button className="p-2 border border-gray-200 rounded-xl text-gray-400 hover:bg-gray-50">
               <ChevronLeft className="w-4 h-4" />
             </button>
-
             <div className="flex items-center space-x-2 text-xs font-semibold">
               <button className="w-8 h-8 rounded-xl bg-[#002045] text-white">1</button>
               <button className="w-8 h-8 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50">2</button>
-              {totalPages > 2 && <button className="w-8 h-8 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50">3</button>}
-              {totalPages > 3 && <span className="text-gray-400 px-1">...</span>}
-              {totalPages > 3 && <button className="w-8 h-8 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50">{totalPages}</button>}
             </div>
-
             <button className="p-2 border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50">
               <ChevronRight className="w-4 h-4" />
             </button>

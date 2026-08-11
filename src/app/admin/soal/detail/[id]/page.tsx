@@ -5,17 +5,15 @@ import { prisma } from "@/lib/prisma";
 import QuestionForm from "@/components/admin/QuestionForm";
 import { ChevronRight } from "lucide-react";
 
-interface EditSoalPageProps {
+interface DetailSoalPageProps {
   params: Promise<{
     id: string;
   }>;
 }
 
-export default async function EditSoalPage({ params }: EditSoalPageProps) {
-  // 1. Await params terlebih dahulu (untuk kompatibilitas Next.js 15+)
+export default async function DetailSoalPage({ params }: DetailSoalPageProps) {
   const { id } = await params;
 
-  // 2. Ambil data soal dari database
   const question = await prisma.question.findUnique({
     where: { id },
   });
@@ -24,36 +22,33 @@ export default async function EditSoalPage({ params }: EditSoalPageProps) {
     notFound();
   }
 
-  // Cast options ke tipe array yang sesuai
   const formattedOptions = (question.options as { label?: string; text: string; score: number }[]) || [];
 
   return (
     <div className="space-y-6">
       {/* HEADER & BREADCRUMBS */}
       <div className="space-y-1">
-        {/* Breadcrumb Navigation */}
         <nav className="flex items-center space-x-2 text-xs text-[#64748B]">
           <Link href="/admin/soal" className="hover:text-[#002045] hover:underline transition-colors font-medium">
             Manajemen Soal
           </Link>
           <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
-          <span className="font-semibold text-[#002045]">Edit Pertanyaan</span>
+          <span className="font-semibold text-[#002045]">Detail Pertanyaan</span>
         </nav>
 
-        {/* Title & Description */}
         <div className="pt-1">
-          <h1 className="text-2xl font-bold text-[#002045]">Edit Pertanyaan</h1>
-          <p className="text-xs text-[#64748B] mt-1">Ubah detail teks pertanyaan, dimensi, atau opsi jawaban.</p>
+          <h1 className="text-2xl font-bold text-[#002045]">Detail Pertanyaan</h1>
+          <p className="text-xs text-[#64748B] mt-1">Lihat rincian konfigurasi dan opsi jawaban dari pertanyaan ini.</p>
         </div>
       </div>
 
-      {/* FORM EDIT PERTANYAAN */}
+      {/* FORM DETAIL (MODE READ ONLY) */}
       <QuestionForm
         initialData={{
           ...question,
           options: formattedOptions,
         }}
-        isEdit={true}
+        isViewOnly={true}
       />
     </div>
   );

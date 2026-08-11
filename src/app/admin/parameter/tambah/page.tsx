@@ -1,0 +1,26 @@
+import React from "react";
+import Link from "next/link";
+import CategoryForm from "@/components/admin/CategoryForm";
+import { ChevronRight } from "lucide-react";
+
+export default function TambahKategoriPage() {
+  return (
+    <div className="space-y-6">
+      <div className="space-y-1">
+        <nav className="flex items-center space-x-2 text-xs text-[#64748B]">
+          <Link href="/admin/parameter" className="hover:text-[#002045] hover:underline transition-colors font-medium">
+            Parameter Assessment
+          </Link>
+          <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
+          <span className="font-semibold text-[#002045]">Tambah Kategori Kompetensi</span>
+        </nav>
+
+        <div className="pt-1">
+          <h1 className="text-2xl font-bold text-[#002045]">Tambah Kategori Kompetensi</h1>
+        </div>
+      </div>
+
+      <CategoryForm isEdit={false} />
+    </div>
+  );
+}
