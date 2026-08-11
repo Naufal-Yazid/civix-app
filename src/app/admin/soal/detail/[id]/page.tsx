@@ -6,9 +6,7 @@ import QuestionForm from "@/components/admin/QuestionForm";
 import { ChevronRight } from "lucide-react";
 
 interface DetailSoalPageProps {
-  params: Promise<{
-    id: string;
-  }>;
+  params: Promise<{ id: string }>;
 }
 
 export default async function DetailSoalPage({ params }: DetailSoalPageProps) {
@@ -22,11 +20,10 @@ export default async function DetailSoalPage({ params }: DetailSoalPageProps) {
     notFound();
   }
 
-  const formattedOptions = (question.options as { label?: string; text: string; score: number }[]) || [];
+  const formattedOptions = (question as unknown as { options: { label?: string; text: string; score: number }[] }).options || [];
 
   return (
     <div className="space-y-6">
-      {/* HEADER & BREADCRUMBS */}
       <div className="space-y-1">
         <nav className="flex items-center space-x-2 text-xs text-[#64748B]">
           <Link href="/admin/soal" className="hover:text-[#002045] hover:underline transition-colors font-medium">
@@ -42,7 +39,6 @@ export default async function DetailSoalPage({ params }: DetailSoalPageProps) {
         </div>
       </div>
 
-      {/* FORM DETAIL (MODE READ ONLY) */}
       <QuestionForm
         initialData={{
           ...question,

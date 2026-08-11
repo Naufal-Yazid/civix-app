@@ -25,7 +25,7 @@ export default async function EditSoalPage({ params }: EditSoalPageProps) {
   }
 
   // Cast options ke tipe array yang sesuai
-  const formattedOptions = (question.options as { label?: string; text: string; score: number }[]) || [];
+  const formattedOptions = (question as unknown as { options: { label?: string; text: string; score: number }[] }).options || [];
 
   return (
     <div className="space-y-6">
