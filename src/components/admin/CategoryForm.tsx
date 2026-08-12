@@ -10,7 +10,6 @@ interface CategoryFormProps {
     id: string;
     code: string;
     name: string;
-    description?: string | null;
     status: QuestionStatus;
   };
   isEdit?: boolean;
@@ -22,7 +21,6 @@ export default function CategoryForm({ initialData, isEdit = false, isViewOnly =
   const [loading, setLoading] = useState(false);
 
   const [name, setName] = useState(initialData?.name || "");
-  const [description, setDescription] = useState(initialData?.description || "");
   const [status, setStatus] = useState<QuestionStatus>(initialData?.status || "ACTIVE");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -38,7 +36,6 @@ export default function CategoryForm({ initialData, isEdit = false, isViewOnly =
 
     const payload: CategoryInput = {
       name,
-      description,
       status,
     };
 
@@ -80,19 +77,6 @@ export default function CategoryForm({ initialData, isEdit = false, isViewOnly =
               onChange={(e) => setName(e.target.value)}
               placeholder="Nama Dimensi"
               className="w-full p-3 text-sm bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#006A61] placeholder:text-gray-300 text-[#1E1E1E] disabled:bg-gray-50 disabled:cursor-not-allowed"
-            />
-          </div>
-
-          {/* Input Deskripsi */}
-          <div>
-            <label className="block text-xs font-semibold text-[#002045] mb-2">Deskripsi</label>
-            <textarea
-              rows={4}
-              disabled={isViewOnly}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Penjelasan Dimensi..."
-              className="w-full p-3.5 text-sm bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#006A61] resize-none placeholder:text-gray-300 text-[#1E1E1E] disabled:bg-gray-50 disabled:cursor-not-allowed"
             />
           </div>
         </div>

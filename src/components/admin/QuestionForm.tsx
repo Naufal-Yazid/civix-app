@@ -19,24 +19,12 @@ interface QuestionFormProps {
     scaleMaxLabel?: string | null;
     options?: { label?: string | null; text: string; score: number }[];
   };
+  dimensionsList?: string[];
   isEdit?: boolean;
   isViewOnly?: boolean;
 }
 
-const dimensionsList = [
-  "Civic Competence",
-  "Professionalisme Reflektif",
-  "Identitas Pedagogik",
-  "Professional Agency",
-  "Civic Disposition",
-  "Digital Citizenship Pedagogy",
-  "Civic Skills",
-  "Community of Practice",
-  "Komitmen Demokratis",
-  "Penguasaan Materi",
-];
-
-export default function QuestionForm({ initialData, isEdit = false, isViewOnly = false }: QuestionFormProps) {
+export default function QuestionForm({ initialData, dimensionsList = [], isEdit = false, isViewOnly = false }: QuestionFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -167,11 +155,17 @@ export default function QuestionForm({ initialData, isEdit = false, isViewOnly =
               <option value="" disabled>
                 Pilih Dimensi Kompetensi
               </option>
-              {dimensionsList.map((d) => (
-                <option key={d} value={d}>
-                  {d}
+              {dimensionsList.length > 0 ? (
+                dimensionsList.map((d) => (
+                  <option key={d} value={d}>
+                    {d}
+                  </option>
+                ))
+              ) : (
+                <option value="" disabled>
+                  (Belum ada dimensi aktif di Parameter Assessment)
                 </option>
-              ))}
+              )}
             </select>
           </div>
         </div>

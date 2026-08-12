@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import QuestionForm from "@/components/admin/QuestionForm";
+import { getActiveCategories } from "@/app/admin/parameter/actions";
 import { ChevronRight } from "lucide-react";
 
 interface DetailSoalPageProps {
@@ -12,14 +13,11 @@ interface DetailSoalPageProps {
 export default async function DetailSoalPage({ params }: DetailSoalPageProps) {
   const { id } = await params;
 
-  const question = await prisma.question.findUnique({
-    where: { id },
-  });
+  const [question, categories] = await Promise.all([prisma.question.findUnique({ where: { id } }), getActiveCategories()]);
 
-  if (!question) {
-    notFound();
-  }
+  if (!question) notFound();
 
+  const dimensionsList = categories.map((c) => c.name);
   const formattedOptions = (question as unknown as { options: { label?: string; text: string; score: number }[] }).options || [];
 
   return (
@@ -35,17 +33,10 @@ export default async function DetailSoalPage({ params }: DetailSoalPageProps) {
 
         <div className="pt-1">
           <h1 className="text-2xl font-bold text-[#002045]">Detail Pertanyaan</h1>
-          <p className="text-xs text-[#64748B] mt-1">Lihat rincian konfigurasi dan opsi jawaban dari pertanyaan ini.</p>
         </div>
       </div>
 
-      <QuestionForm
-        initialData={{
-          ...question,
-          options: formattedOptions,
-        }}
-        isViewOnly={true}
-      />
+      <QuestionForm initialData={{ ...question, options: formattedOptions }} dimensionsList={dimensionsList} isViewOnly={true} />
     </div>
   );
 }

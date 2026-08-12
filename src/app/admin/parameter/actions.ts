@@ -53,3 +53,14 @@ export async function deleteCategory(id: string) {
   });
   revalidatePath("/admin/parameter");
 }
+
+// Tambahkan di src/app/admin/parameter/actions.ts
+
+export async function getActiveCategories() {
+  const categories = await prisma.dimensionCategory.findMany({
+    where: { status: "ACTIVE" },
+    select: { id: true, name: true },
+    orderBy: { name: "asc" },
+  });
+  return categories;
+}

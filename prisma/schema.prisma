@@ -59,3 +59,41 @@ model DimensionCategory {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model CompetencyLevel {
+  id        String         @id @default(cuid())
+  code      String         @unique // LVL001, LVL002, dst.
+  name      String         // Nama Level (misal: Novice Civic Educator)
+  minScore  Int            // Rentang Skor Minimum (0-100)
+  maxScore  Int            // Rentang Skor Maksimum (0-100)
+  status    QuestionStatus @default(ACTIVE)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+model AssessmentResult {
+  id              String             @id @default(cuid())
+  userIdCode      String             @unique // USR001, USR002, dst.
+  userName        String             // Nama Pengguna
+  institution     String?            // Asal Instansi (misal: SMA Negeri 3)
+  gradeLevel      String?            // Jenjang Mengajar (misal: SMA)
+  city            String?            // Wilayah Kota/Kab (misal: Bandung)
+  duration        String?            // Durasi Pengerjaan (misal: 12 Menit 45 Detik)
+  badgeLevel      String             // Level 4, Level 3, dst.
+  compositeScore  Int                // Skor Akhir (misal: 88)
+  dimensionScores Json?              // Rincian skor 10 Dimensi dalam format JSON
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  answers         AssessmentAnswer[]
+}
+
+model AssessmentAnswer {
+  id                 String           @id @default(cuid())
+  assessmentResultId String
+  questionCode       String           // QUE001, QUE002, dst.
+  questionText       String           // Teks Pertanyaan
+  selectedAnswer     String           // A. Sangat Setuju, dsb.
+  score              Int              // Skor dari jawaban
+  createdAt          DateTime         @default(now())
+  assessmentResult   AssessmentResult @relation(fields: [assessmentResultId], references: [id], onDelete: Cascade)
+}
