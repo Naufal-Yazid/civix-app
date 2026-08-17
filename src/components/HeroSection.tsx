@@ -25,12 +25,15 @@ export default function HeroSection() {
 
             {/* Tombol CTA (Center di Mobile, Start di Desktop) */}
             <div className="flex flex-col sm:flex-row justify-center lg:justify-start items-center gap-3 sm:gap-4 pt-2 w-full sm:w-auto">
-              <Link href="/assessment" className="inline-flex items-center justify-center px-6 py-3.5 bg-[#002045] text-white font-semibold text-sm rounded-xl hover:bg-[#133763] transition-all duration-200 shadow-md gap-2 w-full sm:w-auto">
+              <Link
+                href="/assessment"
+                className="inline-flex items-center justify-center px-6 py-3.5 bg-[#002045] text-white font-medium text-sm rounded-[8px] hover:bg-[#133763] transition-all duration-200 shadow-md gap-2 w-full sm:w-auto"
+              >
                 Mulai Assessment Sekarang
                 <ArrowRight className="w-4 h-4" />
               </Link>
 
-              <Link href="#tentang" className="inline-flex items-center justify-center px-6 py-3.5 border border-gray-200 text-[#002045] font-semibold text-sm rounded-xl hover:bg-gray-50 transition-colors w-full sm:w-auto">
+              <Link href="#tentang" className="inline-flex items-center justify-center px-6 py-3.5 border border-gray-200 text-[#002045] font-medium text-sm rounded-[8px] hover:bg-gray-50 transition-colors w-full sm:w-auto">
                 Pelajari Selengkapnya
               </Link>
             </div>

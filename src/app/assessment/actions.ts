@@ -19,6 +19,7 @@ export interface AnswerSubmission {
 }
 
 export interface OptionItem {
+  id?: string;
   label?: string;
   text: string;
   score: number;
@@ -37,62 +38,59 @@ export interface QuestionData {
   options: OptionItem[];
 }
 
-// 1. Fetch Seluruh Soal Aktif dari Bank Soal Admin
 export async function getActiveQuestions(): Promise<QuestionData[]> {
-  const questions = await prisma.question.findMany({
-    where: { status: "ACTIVE" },
-    orderBy: { createdAt: "asc" },
-  });
+  try {
+    const questions = await prisma.question.findMany({
+      where: { status: "ACTIVE" },
+      include: {
+        options: {
+          orderBy: { label: "asc" },
+        },
+      },
+      orderBy: { createdAt: "asc" },
+    });
 
-  return questions.map((q, idx) => {
-    let optionsArr: OptionItem[] = [];
+    return questions.map((q, idx: number) => {
+      const optionsArr: OptionItem[] = Array.isArray(q.options)
+        ? q.options.map((opt) => ({
+            id: opt.id,
+            label: opt.label || "",
+            text: opt.text,
+            score: typeof opt.score === "number" ? opt.score : 0,
+          }))
+        : [];
 
-    // Ambil raw options secara type-safe dari q
-    const rawOptions = (q as unknown as { options?: unknown }).options;
-
-    if (rawOptions) {
-      if (typeof rawOptions === "string") {
-        try {
-          optionsArr = JSON.parse(rawOptions) as OptionItem[];
-        } catch {
-          optionsArr = [];
-        }
-      } else if (Array.isArray(rawOptions)) {
-        optionsArr = rawOptions as OptionItem[];
-      }
-    }
-
-    return {
-      id: q.id,
-      code: q.code || `QUE${(idx + 1).toString().padStart(3, "0")}`,
-      questionText: q.questionText,
-      dimension: q.dimension,
-      type: q.type,
-      scaleMin: q.scaleMin,
-      scaleMax: q.scaleMax,
-      scaleMinLabel: q.scaleMinLabel,
-      scaleMaxLabel: q.scaleMaxLabel,
-      options: optionsArr,
-    };
-  });
+      return {
+        id: q.id,
+        code: q.code || `QUE${(idx + 1).toString().padStart(3, "0")}`,
+        questionText: q.questionText,
+        dimension: q.dimension,
+        type: q.type,
+        scaleMin: q.scaleMin,
+        scaleMax: q.scaleMax,
+        scaleMinLabel: q.scaleMinLabel,
+        scaleMaxLabel: q.scaleMaxLabel,
+        options: optionsArr,
+      };
+    });
+  } catch (error) {
+    console.error("Gagal mengambil data soal:", error);
+    return [];
+  }
 }
 
-// 2. Generate User ID Code Unik (USR001, USR002, dst)
 async function generateUserCode(): Promise<string> {
   const count = await prisma.assessmentResult.count();
   const nextNum = count + 1;
   return `USR${nextNum.toString().padStart(3, "0")}`;
 }
 
-// 3. Simpan Hasil Assessment ke Database
-export async function submitAssessment(biodata: UserBiodata, answers: AnswerSubmission[], durationText: string) {
+export async function submitAssessment(biodata: UserBiodata, demographics: Record<string, string>, answers: AnswerSubmission[], durationText: string) {
   const userIdCode = await generateUserCode();
 
-  // Hitung Skor Komposit (Rata-Rata)
   const totalScore = answers.reduce((acc, curr) => acc + curr.score, 0);
   const compositeScore = answers.length > 0 ? Math.round(totalScore / answers.length) : 0;
 
-  // Tentukan Level berdasarkan Skor Komposit dari database
   const levels = await prisma.competencyLevel.findMany({
     where: { status: "ACTIVE" },
     orderBy: { minScore: "asc" },
@@ -104,7 +102,6 @@ export async function submitAssessment(biodata: UserBiodata, answers: AnswerSubm
     matchedLevel = found.name;
   }
 
-  // Simpan ke Prisma AssessmentResult & AssessmentAnswer
   const result = await prisma.assessmentResult.create({
     data: {
       userIdCode,
@@ -115,6 +112,7 @@ export async function submitAssessment(biodata: UserBiodata, answers: AnswerSubm
       duration: durationText,
       badgeLevel: matchedLevel,
       compositeScore,
+      demographicAnswers: demographics,
       answers: {
         create: answers.map((a) => ({
           questionCode: a.questionCode,

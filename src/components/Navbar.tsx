@@ -63,7 +63,7 @@ export default function Navbar() {
 
         {/* Tombol CTA Desktop */}
         <div className="hidden md:block">
-          <Link href="/assessment" className="px-5 py-2.5 bg-[#002045] text-white text-sm font-medium rounded-xl hover:bg-[#001833] transition-colors shadow-sm">
+          <Link href="/assessment" className="px-7 py-3 bg-[#002045] text-white text-sm font-medium rounded-[8px] hover:bg-[#001833] transition-colors shadow-sm">
             Mulai Assessment
           </Link>
         </div>

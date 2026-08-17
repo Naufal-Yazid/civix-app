@@ -50,12 +50,12 @@ export default function KontakPage() {
             </div>
 
             {/* Form Inputs */}
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-5">
               {/* Grid Nama & Email */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {/* Input Nama */}
                 <div className="space-y-2">
-                  <label htmlFor="nama" className="block text-xs font-semibold text-[#002045]">
+                  <label htmlFor="nama" className="block text-sm font-medium text-[#002045]">
                     Nama
                   </label>
                   <input
@@ -66,13 +66,13 @@ export default function KontakPage() {
                     onChange={handleChange}
                     placeholder="Nama Anda"
                     required
-                    className="w-full px-4 py-3 text-sm bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#006A61] focus:ring-1 focus:ring-[#006A61] transition-all placeholder:text-gray-300"
+                    className="w-full px-4 py-3 text-sm bg-white border border-gray-200 rounded-[8px] focus:outline-none focus:border-[#006A61] focus:ring-1 focus:ring-[#006A61] transition-all placeholder:text-gray-300"
                   />
                 </div>
 
                 {/* Input Email */}
                 <div className="space-y-2">
-                  <label htmlFor="email" className="block text-xs font-semibold text-[#002045]">
+                  <label htmlFor="email" className="block text-sm font-medium text-[#002045]">
                     Email
                   </label>
                   <input
@@ -83,14 +83,14 @@ export default function KontakPage() {
                     onChange={handleChange}
                     placeholder="anda@email.com"
                     required
-                    className="w-full px-4 py-3 text-sm bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#006A61] focus:ring-1 focus:ring-[#006A61] transition-all placeholder:text-gray-300"
+                    className="w-full px-4 py-3 text-sm bg-white border border-gray-200 rounded-[8px] focus:outline-none focus:border-[#006A61] focus:ring-1 focus:ring-[#006A61] transition-all placeholder:text-gray-300"
                   />
                 </div>
               </div>
 
               {/* Input Subjek */}
               <div className="space-y-2">
-                <label htmlFor="subjek" className="block text-xs font-semibold text-[#002045]">
+                <label htmlFor="subjek" className="block text-sm font-medium text-[#002045]">
                   Subjek
                 </label>
                 <input
@@ -101,13 +101,13 @@ export default function KontakPage() {
                   onChange={handleChange}
                   placeholder="Ada yang bisa kami bantu?"
                   required
-                  className="w-full px-4 py-3 text-sm bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#006A61] focus:ring-1 focus:ring-[#006A61] transition-all placeholder:text-gray-300"
+                  className="w-full px-4 py-3 text-sm bg-white border border-gray-200 rounded-[8px] focus:outline-none focus:border-[#006A61] focus:ring-1 focus:ring-[#006A61] transition-all placeholder:text-gray-300"
                 />
               </div>
 
               {/* Textarea Pesan */}
               <div className="space-y-2">
-                <label htmlFor="pesan" className="block text-xs font-semibold text-[#002045]">
+                <label htmlFor="pesan" className="block text-sm font-medium text-[#002045]">
                   Pesan
                 </label>
                 <textarea
@@ -118,12 +118,12 @@ export default function KontakPage() {
                   onChange={handleChange}
                   placeholder="Ceritakan lebih banyak..."
                   required
-                  className="w-full px-4 py-3 text-sm bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#006A61] focus:ring-1 focus:ring-[#006A61] transition-all placeholder:text-gray-300 resize-none"
+                  className="w-full px-4 py-3 text-sm bg-white border border-gray-200 rounded-[8px] focus:outline-none focus:border-[#006A61] focus:ring-1 focus:ring-[#006A61] transition-all placeholder:text-gray-300 resize-none"
                 />
               </div>
 
               {/* Tombol Submit */}
-              <button type="submit" className="w-full py-3.5 bg-[#002045] text-white text-sm font-semibold rounded-xl hover:bg-[#001833] transition-colors shadow-sm flex items-center justify-center gap-2 mt-4">
+              <button type="submit" className="w-full py-3.5 bg-[#002045] text-white text-sm font-semibold rounded-[8px] hover:bg-[#001833] transition-colors shadow-sm flex items-center justify-center gap-2 mt-4">
                 <Send className="w-4 h-4 rotate-45" />
                 Kirim Pesan
               </button>

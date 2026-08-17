@@ -13,7 +13,7 @@ export default function CtaBanner() {
 
         <p className="text-teal-50 text-base sm:text-lg max-w-2xl leading-relaxed">Hanya butuh 15 menit untuk mendapatkan wawasan yang akan mengubah cara Anda mengajar. Tanpa biaya, tanpa login.</p>
 
-        <Link href="/assessment" className="inline-flex items-center justify-center px-6 py-3.5 bg-white text-[#002045] font-semibold text-sm rounded-xl transition-all duration-200 shadow-md gap-2">
+        <Link href="/assessment" className="inline-flex items-center justify-center px-6 py-3.5 bg-white text-[#002045] font-medium text-sm rounded-xl transition-all duration-200 shadow-md gap-2">
           Mulai Sekarang
           <ArrowRight className="w-4 h-4" />
         </Link>

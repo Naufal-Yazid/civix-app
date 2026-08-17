@@ -1,9 +1,10 @@
 import React from "react";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { getAdminCategories } from "./actions";
 import DeleteCategoryModal from "@/components/admin/DeleteCategoryModal";
 import DeleteLevelModal from "@/components/admin/DeleteLevelModal";
-import { Plus, Eye, Edit3, ArrowUpDown, Search, ChevronDown, ChevronLeft, ChevronRight, Inbox } from "lucide-react";
+import { Plus, Eye, Edit3, ArrowUpDown, Search, ChevronDown, Inbox } from "lucide-react";
 
 interface ParameterPageProps {
   searchParams: Promise<{ tab?: string }>;
@@ -13,14 +14,13 @@ export default async function ParameterAssessmentPage({ searchParams }: Paramete
   const { tab } = await searchParams;
   const activeTab = tab === "level" ? "level" : "kategori";
 
-  // Fetch data sesuai tab yang aktif
-  const categories = await prisma.dimensionCategory.findMany({
-    orderBy: { createdAt: "desc" },
-  });
-
-  const levels = await prisma.competencyLevel.findMany({
-    orderBy: { minScore: "asc" },
-  });
+  // Ambil kategori beserta perhitungan total soal dan level secara paralel
+  const [categories, levels] = await Promise.all([
+    getAdminCategories(),
+    prisma.competencyLevel.findMany({
+      orderBy: { minScore: "asc" },
+    }),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -68,6 +68,11 @@ export default async function ParameterAssessmentPage({ searchParams }: Paramete
               <div className="relative">
                 <select className="w-full appearance-none px-3.5 py-2.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-600 focus:outline-none focus:border-[#006A61]">
                   <option value="">Semua ID</option>
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.code}>
+                      {c.code}
+                    </option>
+                  ))}
                 </select>
                 <ChevronDown className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
               </div>
@@ -80,6 +85,11 @@ export default async function ParameterAssessmentPage({ searchParams }: Paramete
               <div className="relative">
                 <select className="w-full appearance-none px-3.5 py-2.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-600 focus:outline-none focus:border-[#006A61]">
                   <option value="">Semua Nama Dimensi</option>
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.name}>
+                      {c.name}
+                    </option>
+                  ))}
                 </select>
                 <ChevronDown className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
               </div>
@@ -92,6 +102,8 @@ export default async function ParameterAssessmentPage({ searchParams }: Paramete
               <div className="relative">
                 <select className="w-full appearance-none px-3.5 py-2.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-600 focus:outline-none focus:border-[#006A61]">
                   <option value="">Semua Status</option>
+                  <option value="ACTIVE">Active</option>
+                  <option value="INACTIVE">Inactive</option>
                 </select>
                 <ChevronDown className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
               </div>
@@ -104,7 +116,7 @@ export default async function ParameterAssessmentPage({ searchParams }: Paramete
       <div className="bg-white border border-gray-200/80 rounded-2xl shadow-xs overflow-hidden">
         {/* Table Top Controls */}
         <div className="p-4 border-b border-gray-100 flex items-center justify-between">
-          <button className="p-2 border border-gray-200 rounded-xl hover:bg-gray-50 text-gray-500">
+          <button className="p-2 border border-gray-200 rounded-xl hover:bg-gray-50 text-gray-500 cursor-pointer">
             <ArrowUpDown className="w-4 h-4" />
           </button>
 
@@ -142,7 +154,7 @@ export default async function ParameterAssessmentPage({ searchParams }: Paramete
                       <td className="p-4 text-gray-400">{idx + 1}</td>
                       <td className="p-4 font-bold text-[#002045]">{cat.code}</td>
                       <td className="p-4 font-medium text-[#1E1E1E]">{cat.name}</td>
-                      <td className="p-4 text-center font-bold text-[#002045]">0</td>
+                      <td className="p-4 text-center font-bold text-[#002045]">{cat.totalQuestions}</td>
                       <td className="p-4 font-semibold">
                         <span className={cat.status === "ACTIVE" ? "text-emerald-600" : "text-rose-500"}>{cat.status === "ACTIVE" ? "Active" : "Inactive"}</span>
                       </td>
@@ -154,7 +166,7 @@ export default async function ParameterAssessmentPage({ searchParams }: Paramete
                           <Link href={`/admin/parameter/edit/${cat.id}`} className="p-1.5 hover:bg-gray-100 rounded-lg">
                             <Edit3 className="w-4 h-4 text-emerald-600" />
                           </Link>
-                          <DeleteCategoryModal id={cat.id} name={cat.name} />
+                          <DeleteCategoryModal id={cat.id} name={cat.name} totalQuestions={cat.totalQuestions} />
                         </div>
                       </td>
                     </tr>

@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAssessmentResultById } from "@/app/admin/pengguna/actions";
-import { ChevronRight, ArrowUpDown, Search } from "lucide-react";
+import { ChevronRight, ArrowUpDown, Search, User, GraduationCap, School, Briefcase, Award } from "lucide-react";
 
 interface DetailUserPageProps {
   params: Promise<{ id: string }>;
@@ -31,10 +31,13 @@ export default async function DetailUserPage({ params }: DetailUserPageProps) {
   }
 
   // Parse dimensionScores dari DB atau gunakan default
-  const dimensions = (result.dimensionScores as typeof defaultDimensions) || defaultDimensions;
+  const dimensions = (result.dimensionScores as unknown as typeof defaultDimensions) || defaultDimensions;
+
+  // Parse demographics dari DB
+  const demoData = (result.demographicAnswers as Record<string, string>) || {};
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 pb-12">
       {/* BREADCRUMBS & HEADER */}
       <div className="space-y-1">
         <nav className="flex items-center space-x-2 text-xs text-[#64748B]">
@@ -51,17 +54,25 @@ export default async function DetailUserPage({ params }: DetailUserPageProps) {
       </div>
 
       {/* CARD 1: PROFIL PENGGUNA */}
-      <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-xs space-y-6">
-        <h2 className="font-bold text-lg text-[#002045]">Profil Pengguna</h2>
+      <div className="bg-white border border-gray-200/80 rounded-2xl p-6 md:p-8 shadow-xs space-y-6">
+        <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
+          <div className="w-9 h-9 rounded-xl bg-[#E6F0F0] text-[#006A61] flex items-center justify-center font-bold">
+            <User className="w-5 h-5" />
+          </div>
+          <div>
+            <h2 className="font-bold text-lg text-[#002045]">Profil Pengguna</h2>
+            <p className="text-xs text-[#64748B]">Informasi umum identitas peserta assessment.</p>
+          </div>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-12 text-xs">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-5 gap-x-12 text-xs">
           <div>
             <span className="text-gray-400 block mb-1">UserID</span>
             <span className="font-bold text-[#002045] text-sm">{result.userIdCode}</span>
           </div>
 
           <div>
-            <span className="text-gray-400 block mb-1">Tanggal</span>
+            <span className="text-gray-400 block mb-1">Tanggal Assessment</span>
             <span className="font-semibold text-[#1E1E1E]">
               {new Date(result.createdAt).toLocaleDateString("id-ID", {
                 day: "numeric",
@@ -72,7 +83,7 @@ export default async function DetailUserPage({ params }: DetailUserPageProps) {
           </div>
 
           <div>
-            <span className="text-gray-400 block mb-1">Nama</span>
+            <span className="text-gray-400 block mb-1">Nama Lengkap</span>
             <span className="font-semibold text-[#1E1E1E]">{result.userName}</span>
           </div>
 
@@ -83,7 +94,7 @@ export default async function DetailUserPage({ params }: DetailUserPageProps) {
 
           <div>
             <span className="text-gray-400 block mb-1">Asal Instansi</span>
-            <span className="font-semibold text-[#1E1E1E]">{result.institution || "SMA Negeri 3"}</span>
+            <span className="font-semibold text-[#1E1E1E]">{result.institution || "SMA Negeri 3 Surabaya"}</span>
           </div>
 
           <div>
@@ -92,15 +103,218 @@ export default async function DetailUserPage({ params }: DetailUserPageProps) {
           </div>
 
           <div>
-            <span className="text-gray-400 block mb-1">Wilayah Kota/Kab</span>
-            <span className="font-semibold text-[#1E1E1E]">{result.city || "Bandung"}</span>
+            <span className="text-gray-400 block mb-1">Wilayah (Kota/Kabupaten)</span>
+            <span className="font-semibold text-[#1E1E1E]">{result.city || "Kota Surabaya"}</span>
           </div>
         </div>
       </div>
 
-      {/* CARD 2: RINGKASAN SKOR */}
-      <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-xs space-y-6">
-        <h2 className="font-bold text-lg text-[#002045]">Ringkasan Skor</h2>
+      {/* CARD 2: PROFIL DEMOGRAFIS & PROFESIONAL RESPONDEN (35 BUTIR LENGKAP) */}
+      {result.demographicAnswers && Object.keys(demoData).length > 0 && (
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-6 md:p-8 shadow-xs space-y-8">
+          <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
+            <div className="w-9 h-9 rounded-xl bg-[#E6F0F0] text-[#006A61] flex items-center justify-center font-bold">
+              <GraduationCap className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="font-bold text-lg text-[#002045]">Profil Demografis & Profesional Responden</h2>
+              <p className="text-xs text-[#64748B]">Rincian 35 butir profil latar belakang pendidikan, satuan pendidikan, dan riwayat mengajar.</p>
+            </div>
+          </div>
+
+          <div className="space-y-8">
+            {/* Bagian 1: Identitas & Latar Belakang Pendidikan */}
+            <div className="space-y-4">
+              <h3 className="text-xs font-bold text-[#006A61] uppercase tracking-wider flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#006A61]" />
+                Bagian 1: Identitas & Latar Belakang Pendidikan
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50/50 p-4 rounded-xl border border-gray-100 text-xs">
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Jenis Kelamin</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.jenisKelamin || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Kelompok Usia</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.kelompokUsia || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Pendidikan Terakhir</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.pendidikanTerakhir || "-"}</span>
+                </div>
+                <div className="md:col-span-2">
+                  <span className="text-gray-400 block mb-0.5">Latar Belakang Pendidikan Utama</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.latarBelakangPendidikan || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Status Sertifikasi Pendidik</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.statusSertifikasi || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Status Kepegawaian</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.statusKepegawaian || "-"}</span>
+                </div>
+                <div className="md:col-span-2">
+                  <span className="text-gray-400 block mb-0.5">Tugas Tambahan di Sekolah</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.tugasTambahan || "-"}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Bagian 2: Profil Satuan Pendidikan */}
+            <div className="space-y-4">
+              <h3 className="text-xs font-bold text-[#006A61] uppercase tracking-wider flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#006A61]" />
+                Bagian 2: Profil Satuan Pendidikan
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50/50 p-4 rounded-xl border border-gray-100 text-xs">
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Jenjang Satuan Pendidikan Utama</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.jenjangPendidikanUtama || result.gradeLevel || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Status Satuan Pendidikan</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.statusSatuanPendidikan || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Akreditasi Sekolah</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.akreditasiSekolah || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Nama Sekolah</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.namaSekolah || result.institution || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">NPSN Sekolah</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.npsnSekolah || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Kecamatan Lokasi di Surabaya</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.kecamatanSurabaya || "-"}</span>
+                </div>
+                <div className="md:col-span-3">
+                  <span className="text-gray-400 block mb-0.5">Kurikulum yang Dominan Digunakan</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.kurikulumDominan || "-"}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Bagian 3: Pengalaman & Beban Mengajar */}
+            <div className="space-y-4">
+              <h3 className="text-xs font-bold text-[#006A61] uppercase tracking-wider flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#006A61]" />
+                Bagian 3: Pengalaman & Beban Mengajar
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50/50 p-4 rounded-xl border border-gray-100 text-xs">
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Total Lama Mengajar</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.totalLamaMengajar || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Lama Mengajar PPKn</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.lamaMengajarPPKn || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Lama di Sekolah Saat Ini</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.lamaMengajarSekolahSaatIni || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Kelas yang Diajar</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.kelasYangDiajar || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Jumlah Rombel PPKn</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.jumlahRombelPPKn || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Beban Jam PPKn / Minggu</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.bebanJamPPKn || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Rata-rata Murid / Kelas</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.rataMuridPerKelas || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Mengajar Mapel Lain?</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.mengajarMapelLain || "Tidak"}</span>
+                </div>
+                {demoData.mengajarMapelLain === "Ya" && (
+                  <div>
+                    <span className="text-gray-400 block mb-0.5">Mata Pelajaran Lain</span>
+                    <span className="font-semibold text-[#1E1E1E]">{demoData.namaMapelLain || "-"}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Bagian 4: Pengembangan Profesi, Pembelajaran & Tindak Lanjut */}
+            <div className="space-y-4">
+              <h3 className="text-xs font-bold text-[#006A61] uppercase tracking-wider flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#006A61]" />
+                Bagian 4: Pengembangan Profesi, Pembelajaran & Tindak Lanjut
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50/50 p-4 rounded-xl border border-gray-100 text-xs">
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Keaktifan dalam MGMP</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.keaktifanMGMP || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Frekuensi MGMP 1 Thn Terakhir</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.frekuensiMGMP || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Pengalaman PTK / Inkuiri Kelas</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.pengalamanPTK || "-"}</span>
+                </div>
+                <div className="md:col-span-2">
+                  <span className="text-gray-400 block mb-0.5">Topik Pengembangan Profesi 2 Thn Terakhir</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.topikPengembanganProfesi || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Pengalaman Berbagi Praktik Baik</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.pengalamanBerbagiPraktikBaik || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Penggunaan Platform Digital</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.frekuensiPlatformDigital || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Dukungan Internet Sekolah</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.kondisiInternetSekolah || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Bahas Isu Publik Aktual/Sensitif</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.frekuensiIsuPublik || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Persepsi Keberagaman Murid</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.keberagamanMurid || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Kesediaan Wawancara Lanjutan</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.kesediaanWawancara || "-"}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Kontak Tindak Lanjut</span>
+                  <span className="font-semibold text-[#1E1E1E]">{demoData.kontakTindakLanjut || "-"}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* CARD 3: RINGKASAN SKOR */}
+      <div className="bg-white border border-gray-200/80 rounded-2xl p-6 md:p-8 shadow-xs space-y-6">
+        <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
+          <div className="w-9 h-9 rounded-xl bg-[#E6F0F0] text-[#006A61] flex items-center justify-center font-bold">
+            <Award className="w-5 h-5" />
+          </div>
+          <div>
+            <h2 className="font-bold text-lg text-[#002045]">Ringkasan Skor</h2>
+            <p className="text-xs text-[#64748B]">Hasil capaian kompetensi dan evaluasi level.</p>
+          </div>
+        </div>
 
         {/* Level & Composite Score */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-b border-gray-100 pb-6 text-xs">
@@ -140,9 +354,17 @@ export default async function DetailUserPage({ params }: DetailUserPageProps) {
         </div>
       </div>
 
-      {/* CARD 3: LOG JAWABAN */}
-      <div className="bg-white border border-gray-200/80 rounded-2xl shadow-xs overflow-hidden space-y-4 p-6">
-        <h2 className="font-bold text-lg text-[#002045]">Log Jawaban</h2>
+      {/* CARD 4: LOG JAWABAN */}
+      <div className="bg-white border border-gray-200/80 rounded-2xl shadow-xs overflow-hidden space-y-4 p-6 md:p-8">
+        <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
+          <div className="w-9 h-9 rounded-xl bg-[#E6F0F0] text-[#006A61] flex items-center justify-center font-bold">
+            <Briefcase className="w-5 h-5" />
+          </div>
+          <div>
+            <h2 className="font-bold text-lg text-[#002045]">Log Jawaban</h2>
+            <p className="text-xs text-[#64748B]">Daftar butir pertanyaan dan respons yang dipilih peserta.</p>
+          </div>
+        </div>
 
         <div className="border border-gray-200/80 rounded-2xl overflow-hidden">
           {/* Controls Header */}
@@ -168,41 +390,30 @@ export default async function DetailUserPage({ params }: DetailUserPageProps) {
                   <th className="p-4 font-semibold w-12">#</th>
                   <th className="p-4 font-semibold w-24">ID</th>
                   <th className="p-4 font-semibold">Pertanyaan</th>
-                  <th className="p-4 font-semibold w-48">Jawaban</th>
+                  <th className="p-4 font-semibold w-52">Jawaban</th>
                 </tr>
               </thead>
 
               <tbody className="divide-y divide-gray-100">
-                {result.answers && result.answers.length > 0
-                  ? result.answers.map((ans, idx) => (
-                      <tr key={ans.id} className="hover:bg-gray-50/60 transition-colors">
-                        <td className="p-4 text-center">
-                          <input type="checkbox" className="rounded border-gray-300 accent-[#002045]" />
-                        </td>
-                        <td className="p-4 text-gray-400">{idx + 1}</td>
-                        <td className="p-4 font-bold text-[#002045]">{ans.questionCode}</td>
-                        <td className="p-4 text-[#1E1E1E] max-w-md truncate">{ans.questionText}</td>
-                        <td className="p-4 font-semibold text-[#002045]">{ans.selectedAnswer}</td>
-                      </tr>
-                    ))
-                  : /* Mockup Rows jika belum ada log terhubung */
-                    [
-                      { code: "QUE001", q: "Bagaimana Anda mengintegrasikan nilai Pancasila dalam kurikulum...", a: "A. Sangat Setuju" },
-                      { code: "QUE002", q: "Sebutkan tiga elemen utama dalam Bela Negara menurut UU No. 23...", a: "B. Setuju" },
-                      { code: "QUE003", q: "Sejauh mana Anda setuju bahwa keterlibatan masyarakat dalam...", a: "C. Kurang Setuju" },
-                      { code: "QUE004", q: "Analisis terhadap penerapan otonomi daerah di Indonesia menunjukkan...", a: "A. Sangat Setuju" },
-                      { code: "QUE005", q: "Fungsi legislasi DPR RI dalam sistem ketatanegaraan Indonesia meliputi...", a: "B. Setuju" },
-                    ].map((row, idx) => (
-                      <tr key={idx} className="hover:bg-gray-50/60 transition-colors">
-                        <td className="p-4 text-center">
-                          <input type="checkbox" className="rounded border-gray-300 accent-[#002045]" />
-                        </td>
-                        <td className="p-4 text-gray-400">{idx + 1}</td>
-                        <td className="p-4 font-bold text-[#002045]">{row.code}</td>
-                        <td className="p-4 text-[#1E1E1E] max-w-md truncate">{row.q}</td>
-                        <td className="p-4 font-semibold text-[#002045]">{row.a}</td>
-                      </tr>
-                    ))}
+                {result.answers && result.answers.length > 0 ? (
+                  result.answers.map((ans, idx) => (
+                    <tr key={ans.id} className="hover:bg-gray-50/60 transition-colors">
+                      <td className="p-4 text-center">
+                        <input type="checkbox" className="rounded border-gray-300 accent-[#002045]" />
+                      </td>
+                      <td className="p-4 text-gray-400">{idx + 1}</td>
+                      <td className="p-4 font-bold text-[#002045]">{ans.questionCode}</td>
+                      <td className="p-4 text-[#1E1E1E] max-w-md truncate">{ans.questionText}</td>
+                      <td className="p-4 font-semibold text-[#002045]">{ans.selectedAnswer}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={5} className="p-6 text-center text-gray-400">
+                      Tidak ada log jawaban tercatat.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
