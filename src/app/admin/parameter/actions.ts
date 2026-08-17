@@ -4,6 +4,13 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { QuestionStatus } from "@prisma/client";
 
+// Export interface CategoryInput yang dibutuhkan oleh CategoryForm.tsx
+export interface CategoryInput {
+  name: string;
+  description?: string | null;
+  status?: QuestionStatus;
+}
+
 export interface CategoryWithCount {
   id: string;
   code: string;
@@ -25,7 +32,6 @@ export async function getAdminCategories(): Promise<CategoryWithCount[]> {
       }),
     ]);
 
-    // Hitung soal dengan normalisasi lowercase dan trim agar selalu cocok
     const questionCountMap: Record<string, number> = {};
     questions.forEach((q) => {
       if (q.dimension) {
@@ -74,7 +80,6 @@ export async function getCategoryDetailWithQuestions(id: string) {
 
     if (!category) return null;
 
-    // Ambil pertanyaan dengan pencocokan case-insensitive
     const relatedQuestions = await prisma.question.findMany({
       where: {
         dimension: {
@@ -102,7 +107,7 @@ export async function getCategoryDetailWithQuestions(id: string) {
 }
 
 // 4. Tambah Dimensi Baru
-export async function createCategory(data: { name: string; description?: string; status?: QuestionStatus }) {
+export async function createCategory(data: CategoryInput) {
   try {
     const count = await prisma.dimensionCategory.count();
     const code = `DMS${(count + 1).toString().padStart(3, "0")}`;
@@ -111,7 +116,7 @@ export async function createCategory(data: { name: string; description?: string;
       data: {
         code,
         name: data.name.trim(),
-        description: data.description?.trim() || null,
+        description: data.description ? data.description.trim() : null,
         status: data.status || "ACTIVE",
       },
     });
@@ -125,7 +130,7 @@ export async function createCategory(data: { name: string; description?: string;
 }
 
 // 5. Update Dimensi
-export async function updateCategory(id: string, data: { name: string; description?: string; status?: QuestionStatus }) {
+export async function updateCategory(id: string, data: CategoryInput) {
   try {
     const oldCategory = await prisma.dimensionCategory.findUnique({ where: { id } });
 
@@ -133,7 +138,7 @@ export async function updateCategory(id: string, data: { name: string; descripti
       where: { id },
       data: {
         name: data.name.trim(),
-        description: data.description?.trim() || null,
+        description: data.description ? data.description.trim() : null,
         status: data.status || "ACTIVE",
       },
     });
@@ -166,7 +171,6 @@ export async function deleteCategory(id: string) {
       return { success: false, message: "Kategori dimensi tidak ditemukan." };
     }
 
-    // Cek apakah masih ada soal yang menggunakan dimensi ini
     const relatedQuestionsCount = await prisma.question.count({
       where: {
         dimension: {
@@ -179,7 +183,7 @@ export async function deleteCategory(id: string) {
     if (relatedQuestionsCount > 0) {
       return {
         success: false,
-        message: `Tidak dapat menghapus dimensi "${category.name}" karena masih terhubung dengan ${relatedQuestionsCount} soal. Hapus atau pindahkan soal terkait terlebih dahulu.`,
+        message: `Tidak dapat menghapus dimensi "${category.name}" karena masih terhubung dengan ${relatedQuestionsCount} soal.`,
       };
     }
 
