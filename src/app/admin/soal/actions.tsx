@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { QuestionType, QuestionStatus } from "@prisma/client";
 
 export interface OptionItem {
   id?: string;
@@ -10,9 +11,8 @@ export interface OptionItem {
   score: number;
 }
 
-export type QuestionType = "SCALE" | "MULTIPLE_CHOICE" | "CHECKBOX" | "DROPDOWN" | "SHORT_TEXT" | "LONG_TEXT";
-
-export interface QuestionFormData {
+// Interface yang diexport untuk QuestionForm.tsx
+export interface QuestionInput {
   id?: string;
   code?: string;
   questionText: string;
@@ -23,16 +23,19 @@ export interface QuestionFormData {
   scaleMinLabel?: string | null;
   scaleMaxLabel?: string | null;
   options?: OptionItem[] | string;
-  status?: "ACTIVE" | "INACTIVE";
+  status?: QuestionStatus;
 }
 
-// 1. Generate Kode Soal Otomatis
+// Alias agar kompatibel jika ada komponen lain yang menggunakan nama QuestionFormData
+export type QuestionFormData = QuestionInput;
+
+// 1. Generate Kode Soal Otomatis (misal: QUE001, QUE002)
 async function generateQuestionCode(): Promise<string> {
   const count = await prisma.question.count();
   return `QUE${(count + 1).toString().padStart(3, "0")}`;
 }
 
-// Helper untuk membersihkan dan menstandarkan opsi jawaban & skor
+// Helper untuk standarisasi format options berdasarkan tipe soal
 function parseAndFormatOptions(type: QuestionType, rawOptionsInput?: OptionItem[] | string): { label: string; text: string; score: number }[] {
   let rawList: OptionItem[] = [];
 
@@ -46,7 +49,7 @@ function parseAndFormatOptions(type: QuestionType, rawOptionsInput?: OptionItem[
     rawList = rawOptionsInput;
   }
 
-  // 1. Format Opsi untuk SCALE (Linear Scale 1..5)
+  // 1. Format untuk tipe SCALE
   if (type === "SCALE") {
     return rawList.map((opt, idx) => ({
       label: opt.label?.trim() || String(idx + 1),
@@ -55,7 +58,7 @@ function parseAndFormatOptions(type: QuestionType, rawOptionsInput?: OptionItem[
     }));
   }
 
-  // 2. Format Opsi untuk MULTIPLE_CHOICE, CHECKBOX, DROPDOWN
+  // 2. Format untuk MULTIPLE_CHOICE, CHECKBOX, DROPDOWN
   if (["MULTIPLE_CHOICE", "CHECKBOX", "DROPDOWN"].includes(type)) {
     return rawList
       .filter((opt) => opt && typeof opt.text === "string" && opt.text.trim() !== "")
@@ -69,7 +72,7 @@ function parseAndFormatOptions(type: QuestionType, rawOptionsInput?: OptionItem[
   return [];
 }
 
-// 2. Ambil Semua Data Soal untuk Admin
+// 2. Ambil Semua Data Soal untuk Tabel Admin (Termasuk Relasi Options)
 export async function getAdminQuestions() {
   try {
     const questions = await prisma.question.findMany({
@@ -106,7 +109,7 @@ export async function getQuestionById(id: string) {
 }
 
 // 4. Tambah Soal Baru
-export async function createQuestion(data: QuestionFormData) {
+export async function createQuestion(data: QuestionInput) {
   try {
     const code = data.code ? data.code.trim() : await generateQuestionCode();
     const isScaleType = data.type === "SCALE";
@@ -133,16 +136,20 @@ export async function createQuestion(data: QuestionFormData) {
     });
 
     revalidatePath("/admin/soal");
+    revalidatePath("/admin/parameter");
     revalidatePath("/assessment");
     return { success: true, data: newQuestion };
   } catch (error) {
     console.error("Create Question Error:", error);
-    return { success: false, message: "Gagal menambahkan pertanyaan baru." };
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Gagal menambahkan pertanyaan baru.",
+    };
   }
 }
 
 // 5. Update / Edit Soal
-export async function updateQuestion(id: string, data: QuestionFormData) {
+export async function updateQuestion(id: string, data: QuestionInput) {
   try {
     const isScaleType = data.type === "SCALE";
     const formattedOptions = parseAndFormatOptions(data.type, data.options);
@@ -160,7 +167,6 @@ export async function updateQuestion(id: string, data: QuestionFormData) {
         scaleMaxLabel: isScaleType ? data.scaleMaxLabel?.trim() || "Sangat Setuju" : null,
         status: data.status || "ACTIVE",
         options: {
-          // Hapus opsi lama dan buat ulang opsi baru beserta skor/value yang dimasukkan
           deleteMany: {},
           create: formattedOptions,
         },
@@ -173,11 +179,15 @@ export async function updateQuestion(id: string, data: QuestionFormData) {
     revalidatePath("/admin/soal");
     revalidatePath(`/admin/soal/edit/${id}`);
     revalidatePath(`/admin/soal/detail/${id}`);
+    revalidatePath("/admin/parameter");
     revalidatePath("/assessment");
     return { success: true, data: updated };
   } catch (error) {
     console.error("Update Question Error:", error);
-    return { success: false, message: "Gagal memperbarui pertanyaan." };
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Gagal memperbarui pertanyaan.",
+    };
   }
 }
 
@@ -189,10 +199,14 @@ export async function deleteQuestion(id: string) {
     });
 
     revalidatePath("/admin/soal");
+    revalidatePath("/admin/parameter");
     revalidatePath("/assessment");
     return { success: true, message: "Pertanyaan berhasil dihapus." };
   } catch (error) {
     console.error("Delete Question Error:", error);
-    return { success: false, message: "Gagal menghapus pertanyaan." };
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Gagal menghapus pertanyaan.",
+    };
   }
 }
