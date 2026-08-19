@@ -17,8 +17,8 @@ export default function DeleteModalButton({ id, code }: { id: string; code: stri
 
   return (
     <>
-      <button onClick={() => setIsOpen(true)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-red-500">
-        <Trash2 className="w-4 h-4" />
+      <button onClick={() => setIsOpen(true)} className="p-1.5 hover:bg-gray-100 rounded-lg text-rose-500 hover:text-red-500">
+        <Trash2 className="w-5 h-5" />
       </button>
 
       {isOpen && (

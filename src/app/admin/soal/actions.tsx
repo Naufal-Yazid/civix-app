@@ -210,3 +210,14 @@ export async function deleteQuestion(id: string) {
     };
   }
 }
+
+// Ambil Kode ID Soal Berikutnya Secara Realtime (QUE001, QUE002, dst)
+export async function getNextQuestionCode(): Promise<string> {
+  try {
+    const count = await prisma.question.count();
+    return `QUE${(count + 1).toString().padStart(3, "0")}`;
+  } catch (error) {
+    console.error("Gagal generate kode soal:", error);
+    return "QUE001";
+  }
+}

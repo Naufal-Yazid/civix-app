@@ -27,7 +27,7 @@ export default async function EditCategoryPage({ params }: EditCategoryPageProps
         </nav>
 
         <div className="pt-1">
-          <h1 className="text-2xl font-bold text-[#002045]">Edit Kategori Kompetensi</h1>
+          <h1 className="text-2xl font-semibold text-[#002045]">Edit Kategori Kompetensi</h1>
         </div>
       </div>
 

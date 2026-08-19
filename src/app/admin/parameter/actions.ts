@@ -198,3 +198,16 @@ export async function deleteCategory(id: string) {
     return { success: false, message: "Gagal menghapus dimensi." };
   }
 }
+
+// Ambil Semua Level Kompetensi
+export async function getAdminLevels() {
+  try {
+    const levels = await prisma.competencyLevel.findMany({
+      orderBy: { minScore: "asc" },
+    });
+    return levels;
+  } catch (error) {
+    console.error("Gagal mengambil data level kompetensi:", error);
+    return [];
+  }
+}

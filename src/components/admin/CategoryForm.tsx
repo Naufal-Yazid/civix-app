@@ -59,24 +59,24 @@ export default function CategoryForm({ initialData, isEdit = false, isViewOnly =
       {/* Form Utama (Kiri) */}
       <div className="lg:col-span-8 space-y-6">
         <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-xs space-y-5">
-          <h2 className="font-bold text-lg text-[#002045]">Dimensi</h2>
+          <h2 className="font-semibold text-lg text-[#002045]">Dimensi</h2>
 
           {/* Input ID (Readonly / Auto Generated) */}
           <div>
-            <label className="block text-xs font-semibold text-[#002045] mb-2">ID</label>
-            <input type="text" readOnly value={initialData?.code || "DMS001"} className="w-full p-3 text-sm bg-gray-50 border border-gray-200 rounded-xl text-gray-400 font-medium cursor-not-allowed focus:outline-none" />
+            <label className="block text-sm font-medium text-[#002045] mb-2">ID</label>
+            <input type="text" readOnly value={initialData?.code || "DMS001"} className="w-full p-3 text-base bg-gray-50 border border-gray-200 rounded-xl text-gray-400 font-medium cursor-not-allowed focus:outline-none" />
           </div>
 
           {/* Input Nama Dimensi */}
           <div>
-            <label className="block text-xs font-semibold text-[#002045] mb-2">Nama Dimensi</label>
+            <label className="block text-sm font-medium text-[#002045] mb-2">Nama Dimensi</label>
             <input
               type="text"
               disabled={isViewOnly}
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Nama Dimensi"
-              className="w-full p-3 text-sm bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#006A61] placeholder:text-gray-300 text-[#1E1E1E] disabled:bg-gray-50 disabled:cursor-not-allowed"
+              className="w-full p-3 text-base bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#006A61] placeholder:text-gray-300 text-[#1E1E1E] disabled:bg-gray-50 disabled:cursor-not-allowed"
             />
           </div>
         </div>
@@ -98,10 +98,10 @@ export default function CategoryForm({ initialData, isEdit = false, isViewOnly =
       {/* Sidebar Status (Kanan) */}
       <div className="lg:col-span-4">
         <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-xs space-y-4">
-          <h3 className="font-bold text-base text-[#002045]">Status</h3>
+          <h3 className="font-semibold text-lg text-[#002045]">Status</h3>
 
           <div className="flex items-center justify-between pt-2">
-            <span className="text-xs font-semibold text-[#1E1E1E]">{status === "ACTIVE" ? "Active" : "Inactive"}</span>
+            <span className="text-base font-medium text-[#1E1E1E]">{status === "ACTIVE" ? "Active" : "Inactive"}</span>
 
             <button
               type="button"

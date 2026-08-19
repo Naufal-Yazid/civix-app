@@ -21,7 +21,7 @@ export default async function TambahSoalPage() {
         </nav>
 
         <div className="pt-1">
-          <h1 className="text-2xl font-bold text-[#002045]">Tambah Pertanyaan</h1>
+          <h1 className="text-2xl font-semibold text-[#002045]">Tambah Pertanyaan</h1>
         </div>
       </div>
 

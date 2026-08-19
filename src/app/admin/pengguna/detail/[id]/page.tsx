@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAssessmentResultById } from "@/app/admin/pengguna/actions";
-import { ChevronRight, ArrowUpDown, Search, User, GraduationCap, School, Briefcase, Award } from "lucide-react";
+import { ChevronRight, ArrowUpDown, Search, User, GraduationCap, Briefcase, Award } from "lucide-react";
 
 interface DetailUserPageProps {
   params: Promise<{ id: string }>;
@@ -49,7 +49,7 @@ export default async function DetailUserPage({ params }: DetailUserPageProps) {
         </nav>
 
         <div className="pt-1">
-          <h1 className="text-2xl font-bold text-[#002045]">View Data Pengguna</h1>
+          <h1 className="text-2xl font-semibold text-[#002045]">View Data Pengguna</h1>
         </div>
       </div>
 
@@ -60,20 +60,20 @@ export default async function DetailUserPage({ params }: DetailUserPageProps) {
             <User className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="font-bold text-lg text-[#002045]">Profil Pengguna</h2>
+            <h2 className="font-semibold text-lg text-[#002045]">Profil Pengguna</h2>
             <p className="text-xs text-[#64748B]">Informasi umum identitas peserta assessment.</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-5 gap-x-12 text-xs">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-5 gap-x-12">
           <div>
-            <span className="text-gray-400 block mb-1">UserID</span>
-            <span className="font-bold text-[#002045] text-sm">{result.userIdCode}</span>
+            <span className="text-[14px] font-medium text-[#64748B] block mb-1">UserID</span>
+            <span className="font-bold text-[#002045] text-[16px]">{result.userIdCode}</span>
           </div>
 
           <div>
-            <span className="text-gray-400 block mb-1">Tanggal Assessment</span>
-            <span className="font-semibold text-[#1E1E1E]">
+            <span className="text-[14px] font-medium text-[#64748B] block mb-1">Tanggal Assessment</span>
+            <span className="text-[16px] font-normal text-[#1E1E1E]">
               {new Date(result.createdAt).toLocaleDateString("id-ID", {
                 day: "numeric",
                 month: "long",
@@ -83,33 +83,33 @@ export default async function DetailUserPage({ params }: DetailUserPageProps) {
           </div>
 
           <div>
-            <span className="text-gray-400 block mb-1">Nama Lengkap</span>
-            <span className="font-semibold text-[#1E1E1E]">{result.userName}</span>
+            <span className="text-[14px] font-medium text-[#64748B] block mb-1">Nama Lengkap</span>
+            <span className="text-[16px] font-normal text-[#1E1E1E]">{result.userName}</span>
           </div>
 
           <div>
-            <span className="text-gray-400 block mb-1">Durasi Pengerjaan</span>
-            <span className="font-semibold text-[#1E1E1E]">{result.duration || "12 Menit 45 Detik"}</span>
+            <span className="text-[14px] font-medium text-[#64748B] block mb-1">Durasi Pengerjaan</span>
+            <span className="text-[16px] font-normal text-[#1E1E1E]">{result.duration || "12 Menit 45 Detik"}</span>
           </div>
 
           <div>
-            <span className="text-gray-400 block mb-1">Asal Instansi</span>
-            <span className="font-semibold text-[#1E1E1E]">{result.institution || "SMA Negeri 3 Surabaya"}</span>
+            <span className="text-[14px] font-medium text-[#64748B] block mb-1">Asal Instansi</span>
+            <span className="text-[16px] font-normal text-[#1E1E1E]">{result.institution || "SMA Negeri 3 Surabaya"}</span>
           </div>
 
           <div>
-            <span className="text-gray-400 block mb-1">Jenjang Mengajar</span>
-            <span className="font-semibold text-[#1E1E1E]">{result.gradeLevel || "SMA"}</span>
+            <span className="text-[14px] font-medium text-[#64748B] block mb-1">Jenjang Mengajar</span>
+            <span className="text-[16px] font-normal text-[#1E1E1E]">{result.gradeLevel || "SMA"}</span>
           </div>
 
           <div>
-            <span className="text-gray-400 block mb-1">Wilayah (Kota/Kabupaten)</span>
-            <span className="font-semibold text-[#1E1E1E]">{result.city || "Kota Surabaya"}</span>
+            <span className="text-[14px] font-medium text-[#64748B] block mb-1">Wilayah (Kota/Kabupaten)</span>
+            <span className="text-[16px] font-normal text-[#1E1E1E]">{result.city || "Kota Surabaya"}</span>
           </div>
         </div>
       </div>
 
-      {/* CARD 2: PROFIL DEMOGRAFIS & PROFESIONAL RESPONDEN (35 BUTIR LENGKAP) */}
+      {/* CARD 2: PROFIL DEMOGRAFIS & PROFESIONAL RESPONDEN */}
       {result.demographicAnswers && Object.keys(demoData).length > 0 && (
         <div className="bg-white border border-gray-200/80 rounded-2xl p-6 md:p-8 shadow-xs space-y-8">
           <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
@@ -117,7 +117,7 @@ export default async function DetailUserPage({ params }: DetailUserPageProps) {
               <GraduationCap className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="font-bold text-lg text-[#002045]">Profil Demografis & Profesional Responden</h2>
+              <h2 className="font-semibold text-lg text-[#002045]">Profil Demografis & Profesional Responden</h2>
               <p className="text-xs text-[#64748B]">Rincian 35 butir profil latar belakang pendidikan, satuan pendidikan, dan riwayat mengajar.</p>
             </div>
           </div>
@@ -125,123 +125,123 @@ export default async function DetailUserPage({ params }: DetailUserPageProps) {
           <div className="space-y-8">
             {/* Bagian 1: Identitas & Latar Belakang Pendidikan */}
             <div className="space-y-4">
-              <h3 className="text-xs font-bold text-[#006A61] uppercase tracking-wider flex items-center gap-2">
+              <h3 className="text-xs font-semibold text-[#006A61] uppercase tracking-wider flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-[#006A61]" />
                 Bagian 1: Identitas & Latar Belakang Pendidikan
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50/50 p-4 rounded-xl border border-gray-100 text-xs">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50/50 p-4 rounded-xl border border-gray-100">
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Jenis Kelamin</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.jenisKelamin || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Jenis Kelamin</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.jenisKelamin || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Kelompok Usia</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.kelompokUsia || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Kelompok Usia</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.kelompokUsia || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Pendidikan Terakhir</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.pendidikanTerakhir || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Pendidikan Terakhir</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.pendidikanTerakhir || "-"}</span>
                 </div>
                 <div className="md:col-span-2">
-                  <span className="text-gray-400 block mb-0.5">Latar Belakang Pendidikan Utama</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.latarBelakangPendidikan || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Latar Belakang Pendidikan Utama</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.latarBelakangPendidikan || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Status Sertifikasi Pendidik</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.statusSertifikasi || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Status Sertifikasi Pendidik</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.statusSertifikasi || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Status Kepegawaian</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.statusKepegawaian || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Status Kepegawaian</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.statusKepegawaian || "-"}</span>
                 </div>
                 <div className="md:col-span-2">
-                  <span className="text-gray-400 block mb-0.5">Tugas Tambahan di Sekolah</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.tugasTambahan || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Tugas Tambahan di Sekolah</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.tugasTambahan || "-"}</span>
                 </div>
               </div>
             </div>
 
             {/* Bagian 2: Profil Satuan Pendidikan */}
             <div className="space-y-4">
-              <h3 className="text-xs font-bold text-[#006A61] uppercase tracking-wider flex items-center gap-2">
+              <h3 className="text-xs font-semibold text-[#006A61] uppercase tracking-wider flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-[#006A61]" />
                 Bagian 2: Profil Satuan Pendidikan
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50/50 p-4 rounded-xl border border-gray-100 text-xs">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50/50 p-4 rounded-xl border border-gray-100">
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Jenjang Satuan Pendidikan Utama</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.jenjangPendidikanUtama || result.gradeLevel || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Jenjang Satuan Pendidikan Utama</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.jenjangPendidikanUtama || result.gradeLevel || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Status Satuan Pendidikan</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.statusSatuanPendidikan || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Status Satuan Pendidikan</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.statusSatuanPendidikan || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Akreditasi Sekolah</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.akreditasiSekolah || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Akreditasi Sekolah</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.akreditasiSekolah || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Nama Sekolah</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.namaSekolah || result.institution || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Nama Sekolah</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.namaSekolah || result.institution || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">NPSN Sekolah</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.npsnSekolah || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">NPSN Sekolah</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.npsnSekolah || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Kecamatan Lokasi di Surabaya</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.kecamatanSurabaya || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Kecamatan Lokasi di Surabaya</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.kecamatanSurabaya || "-"}</span>
                 </div>
                 <div className="md:col-span-3">
-                  <span className="text-gray-400 block mb-0.5">Kurikulum yang Dominan Digunakan</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.kurikulumDominan || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Kurikulum yang Dominan Digunakan</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.kurikulumDominan || "-"}</span>
                 </div>
               </div>
             </div>
 
             {/* Bagian 3: Pengalaman & Beban Mengajar */}
             <div className="space-y-4">
-              <h3 className="text-xs font-bold text-[#006A61] uppercase tracking-wider flex items-center gap-2">
+              <h3 className="text-xs font-semibold text-[#006A61] uppercase tracking-wider flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-[#006A61]" />
                 Bagian 3: Pengalaman & Beban Mengajar
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50/50 p-4 rounded-xl border border-gray-100 text-xs">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50/50 p-4 rounded-xl border border-gray-100">
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Total Lama Mengajar</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.totalLamaMengajar || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Total Lama Mengajar</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.totalLamaMengajar || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Lama Mengajar PPKn</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.lamaMengajarPPKn || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Lama Mengajar PPKn</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.lamaMengajarPPKn || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Lama di Sekolah Saat Ini</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.lamaMengajarSekolahSaatIni || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Lama di Sekolah Saat Ini</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.lamaMengajarSekolahSaatIni || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Kelas yang Diajar</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.kelasYangDiajar || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Kelas yang Diajar</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.kelasYangDiajar || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Jumlah Rombel PPKn</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.jumlahRombelPPKn || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Jumlah Rombel PPKn</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.jumlahRombelPPKn || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Beban Jam PPKn / Minggu</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.bebanJamPPKn || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Beban Jam PPKn / Minggu</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.bebanJamPPKn || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Rata-rata Murid / Kelas</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.rataMuridPerKelas || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Rata-rata Murid / Kelas</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.rataMuridPerKelas || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Mengajar Mapel Lain?</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.mengajarMapelLain || "Tidak"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Mengajar Mapel Lain?</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.mengajarMapelLain || "Tidak"}</span>
                 </div>
                 {demoData.mengajarMapelLain === "Ya" && (
                   <div>
-                    <span className="text-gray-400 block mb-0.5">Mata Pelajaran Lain</span>
-                    <span className="font-semibold text-[#1E1E1E]">{demoData.namaMapelLain || "-"}</span>
+                    <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Mata Pelajaran Lain</span>
+                    <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.namaMapelLain || "-"}</span>
                   </div>
                 )}
               </div>
@@ -249,54 +249,54 @@ export default async function DetailUserPage({ params }: DetailUserPageProps) {
 
             {/* Bagian 4: Pengembangan Profesi, Pembelajaran & Tindak Lanjut */}
             <div className="space-y-4">
-              <h3 className="text-xs font-bold text-[#006A61] uppercase tracking-wider flex items-center gap-2">
+              <h3 className="text-xs font-semibold text-[#006A61] uppercase tracking-wider flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-[#006A61]" />
                 Bagian 4: Pengembangan Profesi, Pembelajaran & Tindak Lanjut
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50/50 p-4 rounded-xl border border-gray-100 text-xs">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50/50 p-4 rounded-xl border border-gray-100">
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Keaktifan dalam MGMP</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.keaktifanMGMP || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Keaktifan dalam MGMP</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.keaktifanMGMP || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Frekuensi MGMP 1 Thn Terakhir</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.frekuensiMGMP || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Frekuensi MGMP 1 Thn Terakhir</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.frekuensiMGMP || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Pengalaman PTK / Inkuiri Kelas</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.pengalamanPTK || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Pengalaman PTK / Inkuiri Kelas</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.pengalamanPTK || "-"}</span>
                 </div>
                 <div className="md:col-span-2">
-                  <span className="text-gray-400 block mb-0.5">Topik Pengembangan Profesi 2 Thn Terakhir</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.topikPengembanganProfesi || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Topik Pengembangan Profesi 2 Thn Terakhir</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.topikPengembanganProfesi || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Pengalaman Berbagi Praktik Baik</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.pengalamanBerbagiPraktikBaik || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Pengalaman Berbagi Praktik Baik</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.pengalamanBerbagiPraktikBaik || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Penggunaan Platform Digital</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.frekuensiPlatformDigital || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Penggunaan Platform Digital</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.frekuensiPlatformDigital || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Dukungan Internet Sekolah</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.kondisiInternetSekolah || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Dukungan Internet Sekolah</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.kondisiInternetSekolah || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Bahas Isu Publik Aktual/Sensitif</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.frekuensiIsuPublik || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Bahas Isu Publik Aktual/Sensitif</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.frekuensiIsuPublik || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Persepsi Keberagaman Murid</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.keberagamanMurid || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Persepsi Keberagaman Murid</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.keberagamanMurid || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Kesediaan Wawancara Lanjutan</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.kesediaanWawancara || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Kesediaan Wawancara Lanjutan</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.kesediaanWawancara || "-"}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Kontak Tindak Lanjut</span>
-                  <span className="font-semibold text-[#1E1E1E]">{demoData.kontakTindakLanjut || "-"}</span>
+                  <span className="text-[14px] font-medium text-[#64748B] block mb-0.5">Kontak Tindak Lanjut</span>
+                  <span className="text-[16px] font-normal text-[#1E1E1E]">{demoData.kontakTindakLanjut || "-"}</span>
                 </div>
               </div>
             </div>
@@ -311,33 +311,33 @@ export default async function DetailUserPage({ params }: DetailUserPageProps) {
             <Award className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="font-bold text-lg text-[#002045]">Ringkasan Skor</h2>
+            <h2 className="font-semibold text-lg text-[#002045]">Ringkasan Skor</h2>
             <p className="text-xs text-[#64748B]">Hasil capaian kompetensi dan evaluasi level.</p>
           </div>
         </div>
 
         {/* Level & Composite Score */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-b border-gray-100 pb-6 text-xs">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-b border-gray-100 pb-6">
           <div>
-            <span className="text-gray-400 block mb-1">Badge Level</span>
-            <span className="font-bold text-[#002045] text-sm">{result.badgeLevel}</span>
+            <span className="text-[14px] font-medium text-[#64748B] block mb-1">Badge Level</span>
+            <span className="font-bold text-[#002045] text-[16px]">{result.badgeLevel}</span>
           </div>
 
           <div>
-            <span className="text-gray-400 block mb-1">Skor Komposit</span>
-            <span className="font-bold text-[#002045] text-sm">{result.compositeScore}/100</span>
+            <span className="text-[14px] font-medium text-[#64748B] block mb-1">Skor Komposit</span>
+            <span className="font-bold text-[#002045] text-[16px]">{result.compositeScore}/100</span>
           </div>
         </div>
 
         {/* 10 Dimensi Kompetensi Grid */}
         <div className="space-y-4 pt-2">
-          <span className="text-xs font-semibold text-gray-400 block">10 Dimensi Kompetensi</span>
+          <span className="text-[14px] font-semibold text-[#002045] block">10 Dimensi Kompetensi</span>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5 text-xs">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
             {dimensions.map((dim) => (
               <div key={dim.id} className="space-y-2">
-                <div className="flex justify-between items-center font-semibold">
-                  <span className="text-[#002045]">
+                <div className="flex justify-between items-center text-[14px]">
+                  <span className="text-[#002045] font-medium">
                     <span className="text-[#006A61] font-bold mr-1.5">{dim.id}.</span>
                     {dim.name}
                   </span>
@@ -361,7 +361,7 @@ export default async function DetailUserPage({ params }: DetailUserPageProps) {
             <Briefcase className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="font-bold text-lg text-[#002045]">Log Jawaban</h2>
+            <h2 className="font-semibold text-lg text-[#002045]">Log Jawaban</h2>
             <p className="text-xs text-[#64748B]">Daftar butir pertanyaan dan respons yang dipilih peserta.</p>
           </div>
         </div>
@@ -369,32 +369,36 @@ export default async function DetailUserPage({ params }: DetailUserPageProps) {
         <div className="border border-gray-200/80 rounded-2xl overflow-hidden">
           {/* Controls Header */}
           <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-white">
-            <button className="p-2 border border-gray-200 rounded-xl hover:bg-gray-50 text-gray-500">
-              <ArrowUpDown className="w-4 h-4" />
+            <button className="p-2 border border-gray-200 rounded-xl hover:bg-gray-50 text-gray-500 cursor-pointer">
+              <ArrowUpDown className="w-[22px] h-[22px]" />
             </button>
 
-            <div className="relative w-64">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-300" />
-              <input type="text" placeholder="Search..." className="w-full pl-9 pr-4 py-2 text-xs bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#006A61] placeholder:text-gray-300" />
+            <div className="relative w-72">
+              <Search className="w-[22px] h-[22px] absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search..."
+                className="w-full pl-11 pr-4 py-2.5 text-[16px] bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#006A61] placeholder:text-gray-400 placeholder:text-[16px]"
+              />
             </div>
           </div>
 
           {/* Table Log Jawaban */}
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-[#F8FAFC] border-b border-gray-100 text-[#64748B]">
+                <tr className="bg-[#F8FAFC] border-b border-gray-100 text-[#64748B] text-[14px]">
                   <th className="p-4 w-10 text-center">
                     <input type="checkbox" className="rounded border-gray-300 accent-[#002045]" />
                   </th>
                   <th className="p-4 font-semibold w-12">#</th>
-                  <th className="p-4 font-semibold w-24">ID</th>
+                  <th className="p-4 font-semibold w-28">ID</th>
                   <th className="p-4 font-semibold">Pertanyaan</th>
-                  <th className="p-4 font-semibold w-52">Jawaban</th>
+                  <th className="p-4 font-semibold w-64">Jawaban</th>
                 </tr>
               </thead>
 
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100 text-[16px]">
                 {result.answers && result.answers.length > 0 ? (
                   result.answers.map((ans, idx) => (
                     <tr key={ans.id} className="hover:bg-gray-50/60 transition-colors">
@@ -403,13 +407,29 @@ export default async function DetailUserPage({ params }: DetailUserPageProps) {
                       </td>
                       <td className="p-4 text-gray-400">{idx + 1}</td>
                       <td className="p-4 font-bold text-[#002045]">{ans.questionCode}</td>
-                      <td className="p-4 text-[#1E1E1E] max-w-md truncate">{ans.questionText}</td>
-                      <td className="p-4 font-semibold text-[#002045]">{ans.selectedAnswer}</td>
+                      <td className="p-4 max-w-md">
+                        <div
+                          title={ans.questionText}
+                          style={{
+                            display: "-webkit-box",
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            lineHeight: "1.4",
+                            maxHeight: "2.8em",
+                          }}
+                          className="text-[#1E1E1E] cursor-default font-normal"
+                        >
+                          {ans.questionText}
+                        </div>
+                      </td>
+                      <td className="p-4 font-medium text-[#002045]">{ans.selectedAnswer}</td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={5} className="p-6 text-center text-gray-400">
+                    <td colSpan={5} className="p-8 text-center text-gray-400">
                       Tidak ada log jawaban tercatat.
                     </td>
                   </tr>

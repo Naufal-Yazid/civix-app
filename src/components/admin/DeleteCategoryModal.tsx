@@ -48,7 +48,7 @@ export default function DeleteCategoryModal({ id, name, totalQuestions = 0 }: De
         className="p-1.5 hover:bg-rose-50 rounded-lg text-rose-500 transition-colors"
         title="Hapus Dimensi"
       >
-        <Trash2 className="w-4 h-4" />
+        <Trash2 className="w-5 h-5" />
       </button>
 
       {/* Modal Popup */}
