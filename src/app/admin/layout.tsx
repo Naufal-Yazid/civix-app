@@ -1,15 +1,51 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import React, { useState, useEffect, useTransition } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, FileText, Target, Users, Settings, Search, Bell, LogOut, AlertCircle, X } from "lucide-react";
 import { logoutAdmin } from "@/app/admin/login/actions";
+import { getAdminProfile } from "@/app/admin/pengaturan/actions";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  // State untuk Data Admin di Header
+  const [adminName, setAdminName] = useState("Admin Civix");
+  const [adminEmail, setAdminEmail] = useState("admin@civix.edu");
+
+  // Load Profil Pertama Kali & Pasang Listener Sinkronisasi
+  useEffect(() => {
+    async function loadHeaderProfile() {
+      const data = await getAdminProfile();
+      if (data) {
+        setAdminName(data.name || "Admin Civix");
+        setAdminEmail(data.email || "admin@civix.edu");
+      }
+    }
+    loadHeaderProfile();
+
+    // Dengar event update profil dari halaman Pengaturan
+    const handleProfileUpdate = (e: CustomEvent<{ name: string; email: string }>) => {
+      if (e.detail?.name) setAdminName(e.detail.name);
+      if (e.detail?.email) setAdminEmail(e.detail.email);
+    };
+
+    window.addEventListener("admin-profile-updated", handleProfileUpdate as EventListener);
+    return () => {
+      window.removeEventListener("admin-profile-updated", handleProfileUpdate as EventListener);
+    };
+  }, []);
+
+  // Helper Inisial Avatar (contoh: "Admin Civix" -> "AC" atau "AD")
+  const getInitials = (text: string) => {
+    if (!text) return "AD";
+    const parts = text.trim().split(" ");
+    if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+    return text.substring(0, 2).toUpperCase();
+  };
 
   // Sembunyikan sidebar & top bar jika sedang berada di halaman login admin
   if (pathname === "/admin/login") {
@@ -66,10 +102,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* Pengaturan Bawah */}
         <div>
-          <button className="flex items-center gap-3.5 px-4 py-3 rounded-xl text-[#64748B] hover:bg-gray-50 hover:text-[#002045] transition-colors font-medium text-[14px] w-full text-left">
+          <Link href="/admin/pengaturan" className={getNavItemClass("/admin/pengaturan")}>
             <Settings className="w-5 h-5" />
             <span>Pengaturan</span>
-          </button>
+          </Link>
         </div>
       </aside>
 
@@ -87,7 +123,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             />
           </div>
 
-          {/* Profil Admin & Action Icons */}
+          {/* Profil Admin Dinamis & Action Icons */}
           <div className="flex items-center space-x-6">
             <button type="button" className="relative p-2 text-gray-500 hover:bg-gray-50 rounded-xl transition-colors">
               <Bell className="w-5 h-5 text-[#002045]" />
@@ -97,10 +133,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <div className="h-8 w-[1px] bg-gray-200" />
 
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-full bg-amber-400 text-white font-bold text-sm flex items-center justify-center">AD</div>
+              <div className="w-10 h-10 rounded-full bg-[#EAA814] text-white font-bold text-sm flex items-center justify-center shrink-0">{getInitials(adminName)}</div>
               <div className="text-left leading-tight">
-                <span className="block text-[14px] font-medium text-[#002045]">Admin Civix</span>
-                <span className="block text-xs text-[#64748B]">admin@civix.edu</span>
+                <span className="block text-[14px] font-medium text-[#002045]">{adminName}</span>
+                <span className="block text-xs text-[#64748B]">{adminEmail}</span>
               </div>
             </div>
 
